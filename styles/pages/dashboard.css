@@ -1,0 +1,493 @@
+/* Dashboard Page Styles */
+.dashboard-main {
+  padding: 16px;
+}
+
+.dashboard-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px 6px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.dashboard-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.dashboard-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 80px;
+  height: 42px;
+  padding: 1px 1px;
+  font-size: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  transition: all 300ms ease-out;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-tab:active {
+  transform: scale(0.98);
+}
+
+.dashboard-tab .tab-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  min-height: 180px;
+  margin: 0 auto;
+}
+
+.content-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.content-grid-3col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.revenue-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.performance-metrics-card {
+  width: 620px;
+  max-width: 600px;
+  border-radius: 16px;
+  box-shadow: 0px 3px 7.7px 0px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  background: white;
+}
+
+.performance-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.revenue-card-wrapper {
+  width: 100%;
+  max-width: 620px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0px 3px 7.7px 0px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+}
+
+.section-title {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  opacity: 1;
+  color: #111827;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.activity-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 7.7px 0px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+}
+
+.activity-section-title {
+  width: auto;
+  height: auto;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  opacity: 1;
+  color: #111827;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.bookings-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 7.7px 0px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+}
+
+.bookings-section-title {
+  width: auto;
+  height: auto;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  opacity: 1;
+  color: rgba(23, 23, 23, 1);
+  margin-bottom: 16px;
+  margin-top: 12px;
+  margin-left: 0;
+}
+
+.performance-metrics-title {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #1C1C1E;
+  margin-bottom: 26px;
+  margin-top: 0;
+  margin-left: 50px;
+}
+
+/* Responsive Styles */
+@media (min-width: 768px) {
+  .dashboard-main {
+    padding: 24px 32px;
+  }
+
+  .dashboard-tabs {
+    gap: 12px;
+    padding: 8px 10px;
+  }
+
+  .dashboard-tab {
+    min-width: 90px;
+    height: 48px;
+    padding: 10px 12px;
+    gap: 8px;
+    font-size: 20px;
+  }
+
+  .dashboard-tab .tab-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .stat-card {
+    min-height: 200px;
+    max-width: 100%;
+  }
+
+  .content-grid-2col {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid-3col {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .performance-metrics-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .performance-metrics-grid {
+    gap: 14px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .revenue-card-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .activity-section {
+    padding: 20px;
+  }
+
+  .activity-section-title {
+    font-size: 26px;
+  }
+
+  .bookings-section {
+    padding: 18px;
+  }
+
+  .bookings-section-title {
+    font-size: 26px;
+  }
+
+  .performance-metrics-title {
+    margin-left: 0;
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-main {
+    padding: 32px 40px;
+  }
+
+  .dashboard-tabs {
+    gap: 12px;
+    padding: 8px 10px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .dashboard-tab {
+    min-width: 110px;
+    width: auto;
+    height: 50px;
+    font-size: 20px;
+    padding: 10px 14px;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .dashboard-tab .tab-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .stat-card {
+    max-width: 290px;
+    min-height: 211px;
+  }
+
+  .content-grid-2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .content-grid-3col {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .performance-metrics-card {
+    width: 620px;
+    max-width: 700px;
+  }
+
+  .performance-metrics-grid {
+    gap: 16px;
+  }
+
+  .revenue-card-wrapper {
+    width: 100%;
+    max-width: 620px;
+  }
+
+  .performance-metrics-title {
+    margin-left: 50px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dashboard-tabs {
+    gap: 20px;
+  }
+
+  .dashboard-tab {
+    min-width: 110px;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-main {
+    padding: 16px;
+  }
+
+  .dashboard-tabs {
+    gap: 8px;
+    padding: 4px 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stats-grid {
+    gap: 12px;
+  }
+
+  .content-grid-2col {
+    gap: 16px;
+  }
+
+  .content-grid-3col {
+    gap: 16px;
+  }
+
+  .performance-metrics-card {
+    padding: 16px;
+    margin: 0;
+  }
+
+  .performance-metrics-grid {
+    gap: 10px;
+  }
+
+  .revenue-card-wrapper {
+    padding: 16px;
+    max-width: 100%;
+  }
+
+  .section-title {
+    font-size: 24px;
+    margin-left: 0;
+    margin-bottom: 12px;
+  }
+
+  .activity-section {
+    padding: 16px;
+  }
+
+  .activity-section-title {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .bookings-section {
+    padding: 16px;
+  }
+
+  .bookings-section-title {
+    font-size: 22px;
+    margin: 0 0 12px 0;
+  }
+
+  .performance-metrics-title {
+    margin-left: 0;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-tab {
+    min-width: 70px;
+    height: 40px;
+    padding: 6px 8px;
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  .dashboard-tab .tab-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .dashboard-tab {
+    min-height: 44px;
+  }
+}
+
+/* Tab Styles */
+.dashboard-tab.active {
+  background-color: rgba(56, 239, 10, 1);
+  color: white;
+}
+
+.dashboard-tab:not(.active) {
+  background-color: white;
+  color: #374151;
+}
+
+.dashboard-tab:not(.active):hover {
+  background-color: rgba(52, 199, 89, 0.1);
+}
+
+.dashboard-tab.active .tab-icon,
+.dashboard-tab.active .material-symbols-rounded.tab-icon {
+  color: white;
+}
+
+.dashboard-tab:not(.active) .tab-icon,
+.dashboard-tab:not(.active) .material-symbols-rounded.tab-icon {
+  color: #374151;
+}
+
+/* Revenue Analytics Title */
+.revenue-analytics-title {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #111827;
+}
+
+/* Revenue Select Dropdown */
+.revenue-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23374151' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+}
+
+/* Bookings Scrollable Container */
+.bookings-scrollable {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #E5E5EA transparent;
+}
+

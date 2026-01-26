@@ -1,0 +1,740 @@
+/* StatsCard Styles */
+.stats-card {
+  padding: 20px;
+  min-height: 160px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 2px 5.5px 0px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.stats-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.stats-card-icon {
+  display: flex;
+  align-items: center;
+  color: #38EF0A;
+  flex-shrink: 0;
+  font-size: 29px;
+  width: 29px;
+  height: 29px;
+}
+
+.stats-card-icon.large {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.stats-card-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stats-card-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1C1C1E;
+  margin: 0;
+}
+
+.stats-card-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1C1C1E;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.stats-card-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stats-card-change span {
+  font-size: 24px;
+}
+
+.stats-card-change.positive {
+  font-size: 24px;
+  color: #2ACD01;
+}
+
+.stats-card-change.negative {
+  color: #2ACD01;
+}
+
+.stats-card-change-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.stats-card-change-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stats-card-subtitle {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stats-card-subtitle.online {
+  color: #2ACD01;
+  font-size: 24px;
+}
+
+.stats-card-subtitle.default {
+  color: #8E8E93;
+}
+
+.stats-card-subtitle-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.stats-card-subtitle-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stats-card-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 24px;
+  margin-top: 8px;
+}
+
+.stats-card-star {
+  width: 18px;
+  height: 18px;
+}
+
+/* MetricCard Styles */
+.metric-card {
+  width: 196px;
+  height: 106px;
+  border-radius: 9px;
+  background: rgba(219, 255, 231, 1);
+  padding-top: 17px;
+  padding-bottom: 17px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 1;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.17);
+  justify-content: center;
+  align-items: center;
+}
+
+.metric-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.metric-right-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metric-icon-box {
+  width: 40px;
+  height: 40px;
+  background: #38EF0A;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-card-icon {
+  width: 24px;
+  height: 24px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.metric-card-value {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1C1C1E;
+  margin: 0;
+  line-height: 100%;
+}
+
+.metric-card-label {
+  width: 158px;
+  height: 22px;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(142, 142, 147, 1);
+  margin: 0;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: capitalize;
+  opacity: 1;
+}
+
+/* ChargerCard Styles */
+.charger-card {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.charger-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: transparent;
+}
+
+.charger-card-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
+.charger-card-status-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.charger-card-edit-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  box-shadow: 0px 3px 4.7px 0px #00000033;
+
+  cursor: pointer;
+  border: none;
+}
+
+.charger-card-image {
+  width: calc(100% - 1.5rem);
+  height: 10vh;
+  min-height: 120px;
+  max-height: 180px;
+  position: relative;
+  background: #F2F2F7;
+  margin-top: 3.5rem;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.charger-card-content {
+  padding: 1rem;
+}
+
+.charger-card-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: rgba(117, 117, 117, 1);
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+
+.charger-card-detail {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #8E8E93;
+}
+
+.charger-card-metric-value {
+  font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: capitalize;
+  color: #1C1C1E;
+}
+
+.charger-card-metric-label {
+  font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #8E8E93;
+}
+
+.charger-card-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.icon-circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: #F2F2F7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Responsive Styles - Small phones: 320px - 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+  .stats-card {
+    padding: 16px;
+    min-height: 140px;
+  }
+
+  .stats-card-title {
+    font-size: 16px;
+  }
+
+  .stats-card-value {
+    font-size: 28px;
+  }
+
+  .stats-card-change {
+    font-size: 12px;
+  }
+
+  .stats-card-change-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .stats-card-subtitle {
+    font-size: 12px;
+  }
+
+  .stats-card-subtitle-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .stats-card-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .stats-card-star {
+    width: 14px;
+    height: 14px;
+  }
+
+  .metric-card {
+    width: 100%;
+    height: auto;
+    min-height: 90px;
+    padding: 16px;
+  }
+
+  .metric-top-row {
+    width: auto;
+    height: auto;
+    gap: 8px;
+  }
+
+  .metric-icon-box {
+    width: 32px;
+    height: 32px;
+  }
+
+  .metric-card-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .metric-card-value {
+    font-size: 22px;
+  }
+
+  .metric-card-label {
+    width: 100%;
+    height: auto;
+    font-size: 14px;
+  }
+
+  .charger-card-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .charger-card-status-text {
+    font-size: 0.75rem;
+  }
+
+  .charger-card-edit-btn {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .charger-card-image {
+    height: 12vh;
+    min-height: 100px;
+    margin-top: 3rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .charger-card-content {
+    padding: 0.75rem;
+  }
+
+  .charger-card-name {
+    font-size: 1rem;
+  }
+
+  .charger-card-detail {
+    font-size: 0.875rem;
+  }
+
+  .charger-card-metric-value {
+    font-size: 1rem;
+  }
+
+  .charger-card-metric-label {
+    font-size: 0.875rem;
+  }
+
+  .charger-card-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+/* Large phones: 481px - 767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .stats-card {
+    padding: 18px;
+    min-height: 150px;
+  }
+
+  .stats-card-title {
+    font-size: 17px;
+  }
+
+  .stats-card-value {
+    font-size: 30px;
+  }
+
+  .metric-card {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    padding: 18px;
+  }
+
+  .metric-top-row {
+    width: auto;
+    height: auto;
+    gap: 10px;
+  }
+
+  .metric-icon-box {
+    width: 36px;
+    height: 36px;
+  }
+
+  .metric-card-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .metric-card-value {
+    font-size: 24px;
+  }
+
+  .metric-card-label {
+    width: 100%;
+    height: auto;
+    font-size: 16px;
+  }
+
+  .charger-card-image {
+    height: 15vh;
+    min-height: 140px;
+    max-height: 160px;
+  }
+
+  .charger-card-name {
+    font-size: 1.125rem;
+  }
+
+  .charger-card-detail {
+    font-size: 0.9375rem;
+  }
+
+  .charger-card-metric-value {
+    font-size: 1.125rem;
+  }
+
+  .charger-card-metric-label {
+    font-size: 0.9375rem;
+  }
+}
+
+/* Tablets: 768px - 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .stats-card {
+    padding: 20px;
+    min-height: 160px;
+  }
+
+  .stats-card-title {
+    font-size: 24px;
+  }
+
+  .stats-card-value {
+    font-size: 32px;
+  }
+
+  .stats-card-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .stats-card-star {
+    width: 18px;
+    height: 18px;
+  }
+
+  .metric-card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 100px;
+    padding: 16px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .metric-top-row {
+    width: auto;
+    height: auto;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .metric-icon-box {
+    width: 38px;
+    height: 38px;
+  }
+
+  .metric-card-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .metric-card-value {
+    font-size: 26px;
+  }
+
+  .metric-card-label {
+    width: 100%;
+    height: auto;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .charger-card {
+    max-width: 100%;
+  }
+
+  .charger-card-image {
+    height: 18vh;
+    min-height: 150px;
+    max-height: 180px;
+    margin-top: 3.5rem;
+  }
+
+  .charger-card-status-text {
+    font-size: 0.875rem;
+  }
+
+  .charger-card-name {
+    font-size: 1.25rem;
+  }
+
+  .charger-card-detail {
+    font-size: 1rem;
+  }
+
+  .charger-card-metric-value {
+    font-size: 1.25rem;
+  }
+
+  .charger-card-metric-label {
+    font-size: 1rem;
+  }
+
+  .charger-card-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Desktop: 1025px+ */
+@media (min-width: 1025px) {
+  .stats-card {
+    padding: 24px;
+    min-height: 170px;
+  }
+
+  .stats-card-title {
+    font-size: 20px;
+  }
+
+  .stats-card-value {
+    font-size: 36px;
+  }
+
+  .stats-card-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+  }
+
+  .stats-card-star {
+    width: 20px;
+    height: 20px;
+  }
+
+  .metric-card {
+    width: 206px;
+    height: 106px;
+    margin-left: 50px;
+  }
+
+  .metric-top-row {
+    width: 120px;
+    height: 40px;
+  }
+
+  .metric-card-label {
+    width: 158px;
+    height: 22px;
+    font-size: 18px;
+  }
+
+  .charger-card {
+    max-width: 400px;
+  }
+
+  .charger-card-image {
+    width: 350px;
+    height: 160px;
+    margin-top: 3.375rem;
+    margin-left: 1.4375rem;
+    margin-right: 1.4375rem;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .charger-card-status {
+    margin-left: 13.125rem;
+  }
+
+  .charger-card-status-text {
+    font-size: 0.875rem;
+  }
+
+  .charger-card-edit-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .charger-card-name {
+    font-size: 1.25rem;
+  }
+
+  .charger-card-detail {
+    font-size: 1rem;
+  }
+
+  .charger-card-metric-value {
+    font-size: 1.25rem;
+  }
+
+  .charger-card-metric-label {
+    font-size: 1rem;
+  }
+
+  .charger-card-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+

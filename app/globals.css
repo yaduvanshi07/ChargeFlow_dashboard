@@ -1,16 +1,23 @@
 @import "tailwindcss";
 
+
+/* Page CSS Imports */
+@import "../styles/pages/dashboard.css";
+@import "../styles/pages/earnings.css";
+@import "../styles/pages/bookings.css";
+@import "../styles/pages/my-chargers.css";
+@import "../styles/pages/edit-profile.css";
+@import "../styles/pages/wallet.css";
+
+/* Component Global CSS Imports (must be loaded from app entry for consistency) */
+@import "../components/bookings/bookings.css";
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,5 +29,65 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Responsive Utilities */
+@media (max-width: 767px) {
+  .responsive-container {
+    padding: 0.75rem !important;
+  }
+  
+  .responsive-text-sm {
+    font-size: 0.75rem !important;
+  }
+  
+  .responsive-text-base {
+    font-size: 0.875rem !important;
+  }
+  
+  .responsive-text-lg {
+    font-size: 1rem !important;
+  }
+  
+  .responsive-text-xl {
+    font-size: 1.125rem !important;
+  }
+  
+  .responsive-text-2xl {
+    font-size: 1.25rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .responsive-container {
+    padding: 1rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding: 1.5rem;
+  }
+  
+  /* No !important - you can override these freely */
+  .responsive-text-sm {
+    font-size: 0.75rem;
+  }
+  
+  .responsive-text-base {
+    font-size: 0.875rem;
+  }
+  
+  .responsive-text-lg {
+    font-size: 1rem;
+  }
+  
+  .responsive-text-xl {
+    font-size: 1.125rem;
+  }
+  
+  .responsive-text-2xl {
+    font-size: 1.25rem;
+  }
 }

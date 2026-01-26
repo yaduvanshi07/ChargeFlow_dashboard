@@ -1,0 +1,222 @@
+/* Personal Information View Page Styles */
+.personal-info-main-content {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.personal-info-sidebar {
+  width: 290px;
+  min-width: 290px; /* Prevents shrinking */
+  flex-shrink: 0; /* Prevents flex shrinking */
+  height: 590px;
+  background: #FFFFFF;
+  border-radius: 15px;
+  padding: 0;
+  box-shadow: 0px 1px 4.8px 0px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 20px;
+}
+
+.personal-info-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%; /* Changed from 290px to 100% */
+  height: 70px;
+  padding: 16px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  text-transform: capitalize;
+  color: #333333;
+  border-radius: 0;
+  margin: 0;
+  box-shadow: 0px 0px 4.8px 0px #0000002E;
+  box-sizing: border-box; /* Important: includes padding in width calculation */
+}
+
+.personal-info-sidebar-item:first-child {
+  border-radius: 0;
+}
+
+.personal-info-sidebar-item svg {
+  flex-shrink: 0;
+}
+
+.personal-info-sidebar-item.active {
+  background: linear-gradient(93.74deg, #30EF0A 0.92%, #25D402 98.52%);
+  box-shadow: 0px 0px 4.8px 0px rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+  color: #FFFFFF;
+}
+
+.personal-info-sidebar-item:hover:not(.active) {
+  background: #F5F5F5;
+}
+
+.personal-info-content-container {
+  flex: 1;
+  background: white;
+  width: 942px;
+  max-width: 942px; /* Added for consistency */
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.personal-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.personal-info-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1C1C1E;
+  margin: 0;
+}
+
+.personal-info-edit-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: #38EF0A;
+  color: white;
+  border: 1px solid #38EF0A;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0px 2px 4.9px 0px #00000033;
+}
+
+.personal-info-edit-button:hover {
+  background: #30B050;
+}
+
+.personal-info-edit-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 24px;
+}
+
+.personal-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.personal-info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.personal-info-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.personal-info-label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #364153;
+}
+
+.personal-info-input-readonly {
+  width: 420px;
+  height: 55px;
+  padding: 16px 15px;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid #CCCCCC;
+  box-shadow: 0px 2px 5.3px 0px #0000001F;
+  font-size: 14px;
+  color: #1C1C1E;
+  background: #F9F9F9;
+  cursor: not-allowed;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.personal-info-input-readonly:focus {
+  outline: none;
+  border-color: #CCCCCC;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .personal-info-main-content {
+    flex-direction: column;
+  }
+
+  .personal-info-sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+  }
+
+  .personal-info-sidebar-item {
+    width: 100%;
+  }
+
+  .personal-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-info-input-readonly {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .personal-info-content-container {
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .personal-info-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .personal-info-edit-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .personal-info-sidebar {
+    width: 290px;
+    min-width: 290px;
+  }
+
+  .personal-info-input-readonly {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+/* Additional mobile responsiveness */
+@media (max-width: 480px) {
+  .personal-info-label {
+    font-size: 18px;
+  }
+}

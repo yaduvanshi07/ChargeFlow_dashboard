@@ -1,0 +1,172 @@
+/* My Charging Stations Styles */
+.charging-stations-container {
+  width: 100%;
+}
+
+.charging-stations-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* My Charging Stations Title */
+.charging-stations-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: rgba(54, 65, 83, 1);
+  margin: 0;
+}
+
+/* Add Charger Button */
+.charging-stations-add-btn {
+  width: 150px;
+  height: 40px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  gap: 1px;
+  background: rgba(56, 239, 10, 1);
+  box-shadow: 0px 2px 4.9px 0px rgba(0, 0, 0, 0.17);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.charging-stations-add-btn:hover {
+  opacity: 0.9;
+}
+
+.charging-stations-add-btn:active {
+  opacity: 0.8;
+}
+
+/* Add Charger Text */
+.add-charger-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: rgba(255, 255, 255, 1);
+}
+
+.charging-stations-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.charging-stations-add-btn-icon {
+  width: 16px;
+  height: 16px;
+  color: white;
+}
+
+/* Small phones: 320px - 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+  .charging-stations-title {
+    font-size: 18px;
+  }
+  
+  .charging-stations-add-btn {
+    width: 120px;
+    height: 36px;
+    padding: 6px 8px;
+    border-radius: 10px;
+  }
+  
+  .add-charger-text {
+    font-size: 14px;
+  }
+  
+  .charging-stations-grid {
+    gap: 0.75rem;
+  }
+}
+
+/* Large phones: 481px - 767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .charging-stations-title {
+    font-size: 20px;
+  }
+  
+  .charging-stations-add-btn {
+    width: 140px;
+    height: 38px;
+    padding: 7px 9px;
+    border-radius: 11px;
+  }
+  
+  .add-charger-text {
+    font-size: 15px;
+  }
+  
+  .charging-stations-grid {
+    gap: 1rem;
+  }
+}
+
+/* Tablets: 768px - 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .charging-stations-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .charging-stations-title {
+    font-size: 22px;
+  }
+  
+  .charging-stations-add-btn {
+    width: 150px;
+    height: 40px;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+  
+  .add-charger-text {
+    font-size: 16px;
+  }
+  
+  .charging-stations-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Tablets landscape & Desktop: 1025px+ */
+@media (min-width: 1025px) {
+  .charging-stations-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .charging-stations-title {
+    font-size: 24px;
+  }
+  
+  .charging-stations-add-btn {
+    width: 150px;
+    height: 40px;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+  
+  .add-charger-text {
+    font-size: 16px;
+  }
+  
+  .charging-stations-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+}
+

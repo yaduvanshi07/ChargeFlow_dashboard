@@ -1,0 +1,196 @@
+/* My Chargers Page Styles */
+.my-chargers-main {
+  padding: 16px;
+}
+
+.my-chargers-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px 6px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.my-chargers-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.my-chargers-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 80px;
+  height: 42px;
+  padding: 1px 1px;
+  font-size: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  transition: all 300ms ease-out;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.my-chargers-tab:active {
+  transform: scale(0.98);
+}
+
+.my-chargers-tab .tab-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.chargers-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Responsive Styles */
+@media (min-width: 768px) {
+  .my-chargers-main {
+    padding: 24px 32px;
+  }
+
+  .my-chargers-tabs {
+    gap: 12px;
+    padding: 8px 10px;
+  }
+
+  .my-chargers-tab {
+    min-width: 90px;
+    height: 48px;
+    padding: 10px 12px;
+    gap: 8px;
+    font-size: 20px;
+  }
+
+  .my-chargers-tab .tab-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .chargers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .my-chargers-main {
+    padding: 32px 40px;
+  }
+
+  .my-chargers-tabs {
+    gap: 12px;
+    padding: 8px 10px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .my-chargers-tab {
+    min-width: 110px;
+    width: auto;
+    height: 50px;
+    font-size: 20px;
+    padding: 10px 14px;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .my-chargers-tab .tab-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .chargers-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .my-chargers-tabs {
+    gap: 20px;
+  }
+
+  .my-chargers-tab {
+    min-width: 110px;
+  }
+
+  .chargers-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .my-chargers-main {
+    padding: 16px;
+  }
+
+  .my-chargers-tabs {
+    gap: 8px;
+    padding: 4px 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chargers-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-chargers-tab {
+    min-width: 70px;
+    height: 40px;
+    padding: 6px 8px;
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  .my-chargers-tab .tab-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .chargers-grid {
+    gap: 12px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .my-chargers-tab {
+    min-height: 44px;
+  }
+}
+

@@ -1,0 +1,427 @@
+/* Booking Cancelled Title */
+.booking-cancelled-title {
+  width: 457px;
+  height: 31.85px;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: #364153;
+  opacity: 1;
+  margin: 0;
+  padding: 5px 10px;
+}
+
+/* Booking Cancelled Container */
+.booking-cancelled-container {
+  width: 1274px;
+  height: auto;
+  background: white;
+  border-radius: 15px;
+  border: 1px solid #DDDDE1;
+  box-shadow: 0px 2px 5.3px 0px rgba(0, 0, 0, 0.24);
+  opacity: 1;
+  overflow: hidden;
+  padding: 0;
+}
+
+.booking-cancelled-wrapper {
+  padding: 0;
+}
+
+.booking-cancelled-scroll {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 0;
+}
+
+.booking-cancelled-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.booking-cancelled-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Booking Cancelled Table */
+.booking-cancelled-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  table-layout: fixed;
+  margin: 0;
+}
+
+/* Define column widths */
+.booking-cancelled-table th:nth-child(1),
+.booking-cancelled-table td:nth-child(1) {
+  width: 18%;
+}
+
+.booking-cancelled-table th:nth-child(2),
+.booking-cancelled-table td:nth-child(2) {
+  width: 14%;
+}
+
+.booking-cancelled-table th:nth-child(3),
+.booking-cancelled-table td:nth-child(3) {
+  width: 10%;
+}
+
+.booking-cancelled-table th:nth-child(4),
+.booking-cancelled-table td:nth-child(4) {
+  width: 20%;
+}
+
+.booking-cancelled-table th:nth-child(5),
+.booking-cancelled-table td:nth-child(5) {
+  width: 12%;
+}
+
+.booking-cancelled-table th:nth-child(6),
+.booking-cancelled-table td:nth-child(6) {
+  width: 10%;
+}
+
+.booking-cancelled-table th:nth-child(7),
+.booking-cancelled-table td:nth-child(7) {
+  width: 16%;
+}
+
+.booking-cancelled-table th,
+.booking-cancelled-table td {
+  padding: 5px 10px;
+  text-align: center;
+}
+
+.booking-cancelled-table th:first-child,
+.booking-cancelled-table td:first-child {
+  padding-left: 25px;
+  text-align: left;
+}
+
+.booking-cancelled-header-row {
+  background: #FA202314;
+  height: 65px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.booking-cancelled-header-row th:first-child {
+  border-top-left-radius: 15px;
+}
+
+.booking-cancelled-header-row th:last-child {
+  border-top-right-radius: 15px;
+}
+
+.booking-cancelled-table th {
+  height: 34px;
+  gap: 10px;
+  opacity: 1;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: #364153;
+  border-bottom: none;
+  white-space: nowrap;
+}
+
+.booking-cancelled-table td {
+  height: 28px;
+  gap: 10px;
+  opacity: 1;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: #364153;
+}
+
+.booking-cancelled-table tbody tr {
+  height: 80px;
+  border-bottom: 1px solid #E5E5EA;
+}
+
+.booking-cancelled-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.booking-cancelled-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 105px;
+  height: 30px;
+  border-radius: 8px;
+  padding: 5px 10px;
+  box-shadow: 0px 2px 4.5px 0px rgba(0, 0, 0, 0.2);
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: #E30004;
+  background: #FA202340;
+}
+
+/* Icon inside the cancelled badge (uses Iconify) */
+.booking-cancelled-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  
+  color: #E30004;
+}
+
+/* make sure the badge adapts when icon is present */
+.booking-cancelled-status-badge {
+  gap: 2px;
+  min-width: 90px;
+}
+
+/* View All Button */
+.booking-cancelled-view-all-btn {
+  background: transparent;
+  color: #364153;
+  width: 117px;
+  height: 39px;
+  border: 1px solid #8E8E93;
+  border-radius: 10px;
+  padding: 10px;
+  gap: 5px;
+  box-shadow: 0px 2px 4.8px 0px rgba(0, 0, 0, 0.14);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 300ms ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booking-cancelled-view-all-btn:hover {
+  border-color:#E30004;
+  color: #E30004;
+}
+
+/* Responsive Design */
+/* Small phones: 320px - 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+  .booking-cancelled-title {
+    font-size: 16px;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 12px;
+  }
+
+  .booking-cancelled-container {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .booking-cancelled-table {
+    min-width: 400px;
+  }
+
+  .booking-cancelled-table th,
+  .booking-cancelled-table td {
+    padding: 8px 6px;
+    text-align: center;
+  }
+
+  .booking-cancelled-table th:first-child,
+  .booking-cancelled-table td:first-child {
+    padding-left: 12px;
+    text-align: left;
+  }
+
+  .booking-cancelled-header-row {
+    height: 50px;
+  }
+
+  .booking-cancelled-table th {
+    font-size: 11px;
+    font-weight: 600;
+    height: auto;
+  }
+
+  .booking-cancelled-table td {
+    font-size: 12px;
+    height: auto;
+    padding: 10px 6px;
+  }
+
+  .booking-cancelled-table tbody tr {
+    height: auto;
+  }
+
+  .booking-cancelled-status-badge {
+    width: auto;
+    height: auto;
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .booking-cancelled-view-all-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Large phones: 481px - 767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .booking-cancelled-title {
+    font-size: 18px;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 14px;
+  }
+
+  .booking-cancelled-container {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .booking-cancelled-table {
+    min-width: 500px;
+  }
+
+  .booking-cancelled-table th,
+  .booking-cancelled-table td {
+    padding: 10px 8px;
+    text-align: center;
+  }
+
+  .booking-cancelled-table th:first-child,
+  .booking-cancelled-table td:first-child {
+    padding-left: 15px;
+    text-align: left;
+  }
+
+  .booking-cancelled-header-row {
+    height: 55px;
+  }
+
+  .booking-cancelled-table th {
+    font-size: 13px;
+    height: auto;
+  }
+
+  .booking-cancelled-table td {
+    font-size: 13px;
+    height: auto;
+    padding: 12px 8px;
+  }
+
+  .booking-cancelled-table tbody tr {
+    height: auto;
+  }
+
+  .booking-cancelled-status-badge {
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .booking-cancelled-view-all-btn {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
+
+/* Tablets: 768px - 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .booking-cancelled-title {
+    font-size: 20px;
+    width: 100%;
+    padding: 0;
+  }
+
+  .booking-cancelled-container {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .booking-cancelled-table {
+    min-width: 600px;
+  }
+
+  .booking-cancelled-table th,
+  .booking-cancelled-table td {
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .booking-cancelled-table th:first-child,
+  .booking-cancelled-table td:first-child {
+    padding-left: 20px;
+    text-align: left;
+  }
+
+  .booking-cancelled-header-row {
+    height: 60px;
+  }
+
+  .booking-cancelled-table th {
+    font-size: 14px;
+    height: auto;
+  }
+
+  .booking-cancelled-table td {
+    font-size: 14px;
+    height: auto;
+    padding: 14px 10px;
+  }
+
+  .booking-cancelled-table tbody tr {
+    height: auto;
+  }
+
+  .booking-cancelled-status-badge {
+    width: auto;
+    height: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .booking-cancelled-view-all-btn {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+}
+
+/* Desktop: 1025px+ */
+@media (min-width: 1025px) {
+  .booking-cancelled-container {
+    width: 1274px;
+    height: auto;
+  }
+
+  .booking-cancelled-table td {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+
+  .booking-cancelled-status-badge {
+    font-size: 16px;
+  }
+}

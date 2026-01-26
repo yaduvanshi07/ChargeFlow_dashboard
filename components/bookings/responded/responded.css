@@ -1,0 +1,271 @@
+.booking-responded-container {
+  margin-bottom: 32px;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.booking-responded-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.booking-responded-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #364153;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.booking-responded-view-all-btn {
+ background: transparent;
+  color: #364153;
+  width: 117px;
+  height: 39px;
+  border: 1px solid #8E8E93;
+  border-radius: 10px;
+  padding: 10px;
+  gap: 5px;
+  box-shadow: 0px 2px 4.8px 0px rgba(0, 0, 0, 0.14);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 300ms ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booking-responded-view-all-btn:hover {
+  background: #A0FF89;
+}
+
+.booking-responded-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 2px 5.5px 0px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  border: 1px solid #EFECEC;
+}
+
+.booking-responded-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+}
+
+.booking-responded-table-header {
+  background: #A0FF89;
+}
+
+.booking-responded-table-header th {
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: #364153;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  border-bottom: none;
+}
+
+.booking-responded-table-row {
+  border-bottom: 1px solid #E5E5EA;
+  transition: background-color 0.2s ease;
+}
+
+.booking-responded-table-row:hover {
+  background-color: rgba(160, 255, 137, 0.1);
+}
+
+.booking-responded-table-row:last-child {
+  border-bottom: none;
+}
+
+.booking-responded-table-row td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #364153;
+  font-weight: 400;
+}
+
+/* Responsive */
+/* Small phones: 320px - 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+  .booking-responded-container {
+    padding: 0 12px;
+    margin-bottom: 20px;
+  }
+
+  .booking-responded-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .booking-responded-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .booking-responded-view-all-btn {
+    align-self: flex-end;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .booking-responded-table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+  }
+
+  .booking-responded-table {
+    min-width: 400px;
+  }
+
+  .booking-responded-table-header th {
+    padding: 10px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .booking-responded-table-row td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+}
+
+/* Large phones: 481px - 767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .booking-responded-container {
+    padding: 0 14px;
+    margin-bottom: 24px;
+  }
+
+  .booking-responded-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .booking-responded-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .booking-responded-view-all-btn {
+    align-self: flex-end;
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .booking-responded-table-wrapper {
+    overflow-x: auto;
+    border-radius: 11px;
+  }
+
+  .booking-responded-table {
+    min-width: 500px;
+  }
+
+  .booking-responded-table-header th {
+    padding: 12px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .booking-responded-table-row td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+}
+
+/* Tablets: 768px - 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .booking-responded-container {
+    padding: 0 16px;
+    margin-bottom: 28px;
+  }
+
+  .booking-responded-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .booking-responded-title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .booking-responded-view-all-btn {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+
+  .booking-responded-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+  }
+
+  .booking-responded-table {
+    min-width: 100%;
+  }
+
+  .booking-responded-table-header th {
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .booking-responded-table-row td {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Desktop: 1025px+ */
+@media (min-width: 1025px) {
+  .booking-responded-container {
+    padding: 0 16px;
+    margin-bottom: 32px;
+  }
+
+  .booking-responded-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .booking-responded-title {
+    font-size: 24px;
+  }
+
+  .booking-responded-table-wrapper {
+    overflow-x: visible;
+  }
+
+  .booking-responded-table {
+    min-width: auto;
+  }
+
+  .booking-responded-table-header th {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+
+  .booking-responded-table-row td {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+}
+

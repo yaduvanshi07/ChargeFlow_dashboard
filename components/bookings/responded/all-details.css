@@ -1,0 +1,209 @@
+.all-booking-details-container {
+  width: 100%;
+  padding: 24px;
+  background: transparent;
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.all-booking-details-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.all-booking-details-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #364153;
+  transition: background-color 0.2s ease;
+  border-radius: 6px;
+}
+
+.all-booking-details-back-btn:hover {
+  background-color: #F8F9FA;
+}
+
+.all-booking-details-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #364153;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.all-booking-details-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.all-booking-details-filter-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.all-booking-details-filter-btn {
+  padding: 10px 20px;
+  border: 1px solid #E5E5EA;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #364153;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  min-width: 140px;
+  text-align: center;
+}
+
+.all-booking-details-filter-btn:hover {
+  background: #F8F9FA;
+  border-color: #E5E5EA;
+}
+
+.all-booking-details-filter-btn.active {
+  background: linear-gradient(135deg, #34C759 0%, #27C400 100%);
+  color: white;
+  border-color: #27C400;
+  box-shadow: 0px 2px 8px rgba(52, 199, 89, 0.3);
+  font-weight: 600;
+}
+
+.all-booking-details-filter-icon-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #E5E5EA;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #364153;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.all-booking-details-filter-icon-btn:hover {
+  background: #F8F9FA;
+  border-color: #34C759;
+}
+
+.all-booking-details-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 24px;
+}
+
+.all-booking-details-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #364153;
+  font-family: 'Inter', sans-serif;
+}
+
+.all-booking-details-search-input::placeholder {
+  color: #8E8E93;
+}
+
+.all-booking-details-table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #E5E5EA;
+}
+
+.all-booking-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+  min-width: 1000px;
+}
+
+.all-booking-details-table-header {
+  background: #A0FF89;
+}
+
+.all-booking-details-table-header th {
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: #364153;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  border-bottom: none;
+}
+
+.all-booking-details-table-row {
+  border-bottom: 1px solid #E5E5EA;
+  transition: background-color 0.2s ease;
+}
+
+.all-booking-details-table-row:hover {
+  background-color: rgba(160, 255, 137, 0.1);
+}
+
+.all-booking-details-table-row:last-child {
+  border-bottom: none;
+}
+
+.all-booking-details-table-row td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #364153;
+  font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .all-booking-details-container {
+    padding: 16px;
+    margin: 16px;
+  }
+
+  .all-booking-details-title {
+    font-size: 20px;
+  }
+
+  .all-booking-details-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .all-booking-details-filter-buttons {
+    width: 100%;
+  }
+
+  .all-booking-details-filter-btn {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .all-booking-details-filter-icon-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .all-booking-details-table-wrapper {
+    overflow-x: scroll;
+  }
+}

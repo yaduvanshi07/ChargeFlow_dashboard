@@ -1,0 +1,205 @@
+/* export-data-section.css */
+
+.export-data-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 20px;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.export-data-section {
+  width: 100%;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* Title Styling */
+.export-data-title {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #3E4651;
+  margin: 0 0 60px 0;
+}
+
+/* Time Range Section */
+.export-time-range {
+  margin-bottom: 52px;
+  margin-left: 72px;
+}
+
+.export-time-range-buttons {
+  display: flex;
+  gap: 66px;
+  flex-wrap: wrap;
+}
+
+.export-time-range-btn {
+  height: 49px;
+  padding: 13px 10px;
+  gap: 5px;
+  border-radius: 12px;
+  border: 1px solid #DDDDDD;
+  background: #FFFFFF;
+  color: #3E4651;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 150px;
+}
+
+.export-time-range-btn.active {
+  background: #38EF0A;
+  border: 1px solid #38EF0A;
+  color: #FFFFFF;
+}
+
+.export-time-range-btn:hover:not(.active) {
+  background: #F5F5F5;
+  border-color: #38EF0A;
+}
+
+/* File Format Section */
+.export-format-section {
+  margin-bottom: 40px;
+}
+
+.export-format-label {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #3E4651;
+  margin: 0 0 24px 0;
+  display: block;
+}
+
+.export-format-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.export-format-option {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid #DDDDDD;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.export-format-option:hover {
+  border-color: #38EF0A;
+  background: #F0FDF4;
+}
+
+.export-format-option.active {
+  border-color: #38EF0A;
+  background: #F0FDF4;
+}
+
+.export-format-icon {
+  width: 32px;
+  height: 32px;
+  color: #3E4651;
+}
+
+.export-format-text {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  color: #3E4651;
+  text-align: center;
+}
+
+/* Download Button */
+.export-download-btn {
+  width: 100%;
+  max-width: 400px;
+  height: 52px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  background: #2FEB00B2;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 20px;
+  margin-left:182px;
+}
+
+.export-download-btn:hover:not(:disabled) {
+  background: #2FD509;
+}
+
+.export-download-btn:disabled {
+  background: #E5E5EA;
+  color: #8E8E93;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .export-data-container {
+    padding: 16px;
+  }
+
+  .export-data-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .export-time-range {
+    margin-bottom: 24px;
+  }
+
+  .export-time-range-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .export-time-range-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .export-format-label {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .export-format-options {
+    justify-content: flex-start;
+  }
+
+  .export-download-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .export-data-container {
+    padding: 18px;
+  }
+}

@@ -1,0 +1,152 @@
+/* Bookings Page Styles */
+.bookings-main {
+  padding: 16px;
+}
+
+.bookings-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px 6px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.bookings-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.bookings-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 80px;
+  height: 42px;
+  padding: 1px 1px;
+  font-size: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  transition: all 300ms ease-out;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.bookings-tab:active {
+  transform: scale(0.98);
+}
+
+.bookings-tab .tab-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.bookings-content-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Responsive Styles */
+@media (min-width: 768px) {
+  .bookings-main {
+    padding: 24px 32px;
+  }
+
+  .bookings-tabs {
+    gap: 12px;
+    padding: 8px 10px;
+  }
+
+  .bookings-tab {
+    min-width: 90px;
+    height: 48px;
+    padding: 10px 12px;
+    gap: 8px;
+    font-size: 20px;
+  }
+
+  .bookings-tab .tab-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bookings-main {
+    padding: 32px 40px;
+  }
+
+  .bookings-tabs {
+    gap: 12px;
+    padding: 8px 10px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .bookings-tab {
+    min-width: 110px;
+    width: auto;
+    height: 50px;
+    font-size: 20px;
+    padding: 10px 14px;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .bookings-tab .tab-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .bookings-tabs {
+    gap: 20px;
+  }
+
+  .bookings-tab {
+    min-width: 110px;
+  }
+}
+
+@media (max-width: 767px) {
+  .bookings-main {
+    padding: 16px;
+  }
+
+  .bookings-tabs {
+    gap: 8px;
+    padding: 4px 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .bookings-tab {
+    min-width: 70px;
+    height: 40px;
+    padding: 6px 8px;
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  .bookings-tab .tab-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .bookings-tab {
+    min-height: 44px;
+  }
+}
+
