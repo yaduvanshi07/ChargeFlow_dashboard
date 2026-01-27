@@ -1,3 +1,23 @@
+/* Universal Box Sizing */
+* {
+  box-sizing: border-box;
+}
+
+/* CSS Variables for Production */
+:root {
+  --card-padding-mobile: 0.75rem;
+  --card-padding-tablet: 1.25rem;
+  --card-padding-desktop: 1.5rem;
+  --primary-green: #33DB09;
+  --light-green: #76FF54;
+  --bright-green: #0FE545;
+  --bg-light-green: #F7FFFB;
+  --border-green: #CCFFC0;
+  --icon-green: #2EDE02;
+  --text-dark: #364153;
+  --white: #FFFFFF;
+}
+
 /* RevenueChart Styles */
 .revenue-chart-container {
   width: 100%;
@@ -31,7 +51,7 @@
   line-height: 100%;
   letter-spacing: 0%;
   text-transform: capitalize;
-  color: #364153;
+  color: var(--text-dark);
   margin: 0;
   margin-bottom: 1rem;
 }
@@ -44,14 +64,14 @@
 }
 
 .last-30-days-card {
-  background: white;
+  background: var(--white);
   border-radius: 16px;
   box-shadow: 0px 4px 6.7px 0px #00000033;
   padding: 1rem;
-  width: 689px;
+  max-width: 689px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 .last-30-days-title {
@@ -61,7 +81,7 @@
   line-height: 100%;
   letter-spacing: 0%;
   text-transform: capitalize;
-  color: #33DB09;
+  color: var(--primary-green);
   padding: 8px 16px;
   border-radius: 8px;
   display: inline-block;
@@ -80,16 +100,16 @@
 }
 
 .this-month-card {
-  background: #F7FFFB;
+  background: var(--bg-light-green);
   border-radius: 18px;
-  border: 1px solid #CCFFC0;
+  border: 1px solid var(--border-green);
   box-shadow: 0px 4px 6.7px 0px #00000033;
   padding: 1rem;
-  width: 507px;
-  height:427px;
+  max-width: 507px;
+  width: 100%;
+  max-height: 427px;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 .this-month-title {
@@ -99,7 +119,7 @@
   line-height: 100%;
   letter-spacing: 0%;
   text-transform: capitalize;
-  color: #364153;
+  color: var(--text-dark);
   margin: 0;
   margin-bottom: 20px;
   flex-shrink: 0;
@@ -115,7 +135,7 @@
 
 .earning-item {
   width: 100%;
-  background: #76FF54;
+  background: var(--light-green);
   border-radius: 9px;
   box-shadow: 0px 2px 4px 0px #00000033;
   min-height: 70px;
@@ -124,7 +144,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  box-sizing: border-box;
   flex-shrink: 0;
 }
 
@@ -132,7 +151,7 @@
   width: 50px;
   height: 50px;
   border-radius: 12px;
-  background: #FFFFFF;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,18 +159,17 @@
   opacity: 1;
   box-shadow: 0px 3px 5.3px 0px #00000033;
 }
-.earning-item:last-child .earning-icon {
-  color: #2EDE02;
-  fill: #2EDE02;
-}
 
+.earning-item:last-child .earning-icon {
+  color: var(--icon-green);
+  fill: var(--icon-green);
+}
 
 .earning-icon {
   width: 20px;
   height: 20px;
-  color: #2EDE02;
+  color: var(--icon-green);
 }
-
 
 .earning-details {
   flex: 1;
@@ -162,7 +180,7 @@
   font-weight: 700;
   font-size: 1.125rem;
   line-height: 100%;
-  color: white;
+  color: var(--white);
   margin: 0;
   margin-bottom: 4px;
 }
@@ -172,23 +190,23 @@
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 100%;
-  color: white;
+  color: var(--white);
   margin: 0;
 }
 
 .download-invoice-btn {
-  width: 300px;
+  max-width: 300px;
+  width: 100%;
   height: 45px;
-  background: #0FE545;
-  margin-left: 90px;
-  border: 1px solid #FFFFFF;
+  background: var(--bright-green);
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--white);
   border-radius: 50px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
+  color: var(--text-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,8 +222,23 @@
   opacity: 0.9;
 }
 
-/* Responsive Styles - Small phones: 320px - 480px */
+/* ============================================ */
+/* RESPONSIVE STYLES */
+/* ============================================ */
+
+/* Mobile Responsive Styles - Small phones: 320px - 480px */
 @media (min-width: 320px) and (max-width: 480px) {
+  /* Parent container fixes */
+  .content-grid-3col,
+  .content-grid-2col,
+  .stats-grid,
+  .revenue-card-wrapper,
+  .performance-metrics-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
   .revenue-chart-container {
     height: 20vh;
     min-height: 150px;
@@ -220,27 +253,114 @@
     r: 2.5;
   }
 
+  .earnings-overview-container {
+    margin-bottom: 16px;
+    padding: 0 0.5rem;
+    width: 100%;
+  }
+
+  .earnings-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
   .earnings-responsive-grid {
+    display: flex;
+    flex-direction: column;
     gap: 0.75rem;
+    width: 100%;
   }
 
   .last-30-days-card {
-    padding: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: var(--card-padding-mobile);
+    margin: 0;
+  }
+
+  .last-30-days-title {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    margin-bottom: 0.75rem;
   }
 
   .earnings-chart-container {
     height: 20vh;
     min-height: 150px;
     max-height: 200px;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
   }
 
   .this-month-card {
-    padding: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    max-height: none;
+    padding: var(--card-padding-mobile);
+    margin: 0;
+  }
+
+  .this-month-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .earnings-items-container {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .earning-item {
+    min-height: 60px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+
+  .earning-icon-box {
+    width: 40px;
+    height: 40px;
+  }
+
+  .earning-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .earning-amount {
+    font-size: 0.875rem;
+    margin-bottom: 3px;
+  }
+
+  .earning-label {
+    font-size: 0.625rem;
+  }
+
+  .download-invoice-btn {
+    width: 100%;
+    max-width: 100%;
+    height: 40px;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 13px;
   }
 }
 
 /* Large phones: 481px - 767px */
 @media (min-width: 481px) and (max-width: 767px) {
+  /* Parent container fixes */
+  .content-grid-3col,
+  .content-grid-2col,
+  .stats-grid,
+  .revenue-card-wrapper,
+  .performance-metrics-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
   .revenue-chart-container {
     height: 22vh;
     min-height: 160px;
@@ -251,22 +371,94 @@
     font-size: 10px;
   }
 
+  .earnings-overview-container {
+    margin-bottom: 20px;
+    padding: 0 0.5rem;
+    width: 100%;
+  }
+
+  .earnings-title {
+    font-size: 1.375rem;
+    margin-bottom: 0.875rem;
+  }
+
   .earnings-responsive-grid {
+    display: flex;
+    flex-direction: column;
     gap: 0.75rem;
+    width: 100%;
   }
 
   .last-30-days-card {
-    padding: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 1rem;
+    margin: 0;
+  }
+
+  .last-30-days-title {
+    font-size: 0.8125rem;
+    padding: 7px 14px;
   }
 
   .earnings-chart-container {
-    height: 20vh;
-    min-height: 150px;
-    max-height: 200px;
+    height: 22vh;
+    min-height: 160px;
+    max-height: 220px;
+    padding-left: 1.5rem;
   }
 
   .this-month-card {
-    padding: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    max-height: none;
+    padding: 1rem;
+    margin: 0;
+  }
+
+  .this-month-title {
+    font-size: 1.125rem;
+    margin-bottom: 16px;
+  }
+
+  .earnings-items-container {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .earning-item {
+    min-height: 65px;
+    padding: 10px 14px;
+    gap: 11px;
+  }
+
+  .earning-icon-box {
+    width: 45px;
+    height: 45px;
+  }
+
+  .earning-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .earning-amount {
+    font-size: 1rem;
+  }
+
+  .earning-label {
+    font-size: 0.6875rem;
+  }
+
+  .download-invoice-btn {
+    width: 100%;
+    max-width: 100%;
+    height: 42px;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 13px;
   }
 }
 
@@ -292,7 +484,8 @@
   }
 
   .last-30-days-card {
-    padding: 1.25rem;
+    max-width: 100%;
+    padding: var(--card-padding-tablet);
   }
 
   .earnings-chart-container {
@@ -302,7 +495,15 @@
   }
 
   .this-month-card {
-    padding: 1.25rem;
+    max-width: 100%;
+    max-height: none;
+    padding: var(--card-padding-tablet);
+  }
+
+  .download-invoice-btn {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .earnings-title {
@@ -348,7 +549,7 @@
   }
 
   .last-30-days-card {
-    padding: 1.5rem;
+    padding: var(--card-padding-desktop);
   }
 
   .earnings-chart-container {
@@ -358,7 +559,7 @@
   }
 
   .this-month-card {
-    padding: 1.5rem;
+    padding: var(--card-padding-desktop);
   }
 
   .earnings-title {
@@ -368,7 +569,7 @@
     line-height: 100%;
     letter-spacing: 0%;
     text-transform: capitalize;
-    color: #364153;
+    color: var(--text-dark);
     margin: 0;
     margin-bottom: 1rem;
   }
@@ -389,4 +590,3 @@
     font-size: 0.875rem;
   }
 }
-
