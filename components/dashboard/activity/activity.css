@@ -1,8 +1,10 @@
 /* Recent Activity Container */
 .recent-activity-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 100%; /* Changed from 800px to allow full responsiveness */
   margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .recent-activity-header {
@@ -40,6 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .view-all-button:hover {
@@ -50,12 +53,15 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 }
 
 /* ActivityItem Styles */
 .activity-item {
-  width: 566px;
-  height: 118px;
+  width: 100%; /* Changed from 566px */
+  max-width: 100%; /* Added to prevent overflow */
+  height: auto; /* Changed from fixed 118px */
+  min-height: 118px;
   border-radius: 12px;
   background: rgba(231, 252, 235, 1);
   border: 1px solid rgba(215, 215, 215, 1);
@@ -66,6 +72,7 @@
   justify-content: space-between;
   gap: 16px;
   opacity: 1;
+  box-sizing: border-box; /* Added to include padding in width */
 }
 
 .activity-left-content {
@@ -73,8 +80,9 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 0;
+  min-width: 0; /* Added to allow flex item to shrink */
   padding-bottom: 10px;
+  overflow: hidden; /* Added to prevent content overflow */
 }
 
 .activity-item-title-row {
@@ -94,6 +102,7 @@
   width: 28px;
   height: 28px;
   color: #34C759;
+  flex-shrink: 0; /* Added to prevent icon from shrinking */
 }
 
 .activity-item-title {
@@ -106,6 +115,8 @@
   letter-spacing: 0%;
   text-transform: capitalize;
   opacity: 1;
+  word-wrap: break-word; /* Added to allow text wrapping */
+  overflow-wrap: break-word;
 }
 
 .activity-item-details {
@@ -118,6 +129,8 @@
   line-height: 100%;
   letter-spacing: 0%;
   text-transform: capitalize;
+  word-wrap: break-word; /* Added to allow text wrapping */
+  overflow-wrap: break-word;
 }
 
 .activity-item-time {
@@ -129,6 +142,8 @@
   line-height: 18px;
   letter-spacing: 0%;
   text-transform: capitalize;
+  word-wrap: break-word; /* Added to allow text wrapping */
+  overflow-wrap: break-word;
 }
 
 .activity-item-amount {
@@ -144,6 +159,7 @@
   text-transform: capitalize;
   white-space: nowrap;
   align-self: center;
+  flex-shrink: 0; /* Added to prevent amount from shrinking */
 }
 
 .activity-item-rating {
@@ -151,22 +167,26 @@
   align-items: center;
   gap: 4px;
   align-self: center;
+  flex-shrink: 0; /* Added to prevent rating from shrinking */
 }
 
 .activity-item-star {
   width: 20px;
   height: 20px;
+  flex-shrink: 0; /* Added to prevent stars from shrinking */
 }
 
 /* RecentTransactions Styles */
 .transactions-container {
   width: 100%;
+  max-width: 100%;
   font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
 }
 
 .transactions-title {
-  width: 257px;
-  height: 31.850427627563477px;
+  width: auto; /* Changed from fixed 257px */
+  max-width: 100%;
   font-family: Inter, system-ui, -apple-system, sans-serif;
   font-weight: 700;
   font-size: 24px;
@@ -184,6 +204,8 @@
   border-radius: 12px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .transaction-item {
@@ -195,6 +217,8 @@
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .transaction-icon {
@@ -278,10 +302,15 @@
   min-width: 70px;
   text-align: center;
   text-transform: capitalize;
+  flex-shrink: 0;
 }
 
 /* Responsive Styles - Small phones: 320px - 480px */
-@media (min-width: 320px) and (max-width: 480px) {
+@media (max-width: 480px) {
+  .recent-activity-container {
+    padding: 0 12px;
+  }
+
   .recent-activity-header {
     margin-bottom: 16px;
   }
@@ -311,6 +340,10 @@
     align-items: flex-start;
   }
 
+  .activity-left-content {
+    width: 100%;
+  }
+
   .activity-item-icon-container {
     width: auto;
     height: auto;
@@ -327,12 +360,12 @@
 
   .activity-item-details {
     font-size: 14px;
-    padding-left: 44px;
+    padding-left: 36px;
   }
 
   .activity-item-time {
     font-size: 12px;
-    padding-left: 44px;
+    padding-left: 36px;
     padding-bottom: 8px;
     margin-bottom: 8px;
   }
@@ -404,6 +437,10 @@
 
 /* Large phones: 481px - 767px */
 @media (min-width: 481px) and (max-width: 767px) {
+  .recent-activity-container {
+    padding: 0 14px;
+  }
+
   .recent-activity-title {
     font-size: 20px;
   }
@@ -419,6 +456,12 @@
     height: auto;
     min-height: 110px;
     padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .activity-left-content {
+    width: 100%;
   }
 
   .activity-item-title {
@@ -427,6 +470,19 @@
 
   .activity-item-details {
     font-size: 15px;
+    padding-left: 40px;
+  }
+
+  .activity-item-time {
+    padding-left: 40px;
+  }
+
+  .activity-item-amount {
+    align-self: flex-end;
+  }
+
+  .activity-item-rating {
+    align-self: flex-end;
   }
 
   .transaction-amount {
@@ -436,6 +492,10 @@
 
 /* Tablets: 768px - 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
+  .recent-activity-container {
+    padding: 0 16px;
+  }
+
   .recent-activity-title {
     font-size: 22px;
   }
@@ -461,11 +521,21 @@
 
   .activity-item-details {
     font-size: 14px;
+    padding-left: 0;
+  }
+
+  .activity-item-time {
+    padding-left: 0;
   }
 
   .activity-item-amount {
     padding: 10px 14px;
     font-size: 13px;
+    align-self: center;
+  }
+
+  .activity-item-rating {
+    align-self: center;
   }
 
   .transactions-title {
@@ -518,12 +588,51 @@
   }
 }
 
-/* Desktop: 1025px+ */
-@media (min-width: 1025px) {
+/* Small Desktop: 1025px - 1200px */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .recent-activity-container {
+    padding: 0 16px;
+  }
+
   .activity-item {
-    width: 566px;
-    height: 118px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 118px;
     padding: 20px;
+    flex-direction: row;
+  }
+
+  .activity-item-details {
+    padding-left: 0;
+  }
+
+  .activity-item-time {
+    padding-left: 0;
+  }
+}
+
+/* Desktop: 1201px+ */
+@media (min-width: 1201px) {
+  .recent-activity-container {
+    max-width: 800px;
+    padding: 0 16px;
+  }
+
+  .activity-item {
+    width: 100%;
+    max-width: 566px;
+    height: auto;
+    min-height: 118px;
+    padding: 20px;
+  }
+
+  .activity-item-details {
+    padding-left: 0;
+  }
+
+  .activity-item-time {
+    padding-left: 0;
   }
 
   .transactions-title {
