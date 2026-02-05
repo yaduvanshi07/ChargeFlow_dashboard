@@ -1,6 +1,7 @@
 /* My Charging Stations Styles */
 .charging-stations-container {
   width: 100%;
+  overflow: hidden;
 }
 
 .charging-stations-header {
@@ -49,124 +50,204 @@
   opacity: 0.8;
 }
 
-/* Add Charger Text */
-.add-charger-text {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  text-transform: capitalize;
-  color: rgba(255, 255, 255, 1);
-}
-
-.charging-stations-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
 .charging-stations-add-btn-icon {
   width: 16px;
   height: 16px;
+  margin-right: 8px;
   color: white;
 }
 
-/* Small phones: 320px - 480px */
-@media (min-width: 320px) and (max-width: 480px) {
-  .charging-stations-title {
-    font-size: 18px;
+.add-charger-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+/* Charger Cards Grid - Horizontal Scrolling */
+.charging-stations-grid-horizontal-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-radius: 16px;
+  padding: 4px 0;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.charging-stations-grid-horizontal-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Grid items should not shrink and have fixed width */
+.charging-stations-grid-horizontal-scroll > * {
+  flex-shrink: 0;
+  width: 380px;
+  min-width: 380px;
+}
+
+/* Horizontal Empty State */
+.charging-stations-empty-horizontal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  border: 2px dashed #e5e7eb;
+  min-height: 300px;
+  width: 100%;
+  min-width: 380px;
+}
+
+/* Responsive Design for Horizontal Scroll */
+@media (max-width: 768px) {
+  .charging-stations-grid-horizontal-scroll > * {
+    width: 320px;
+    min-width: 320px;
   }
   
-  .charging-stations-add-btn {
-    width: 120px;
-    height: 36px;
-    padding: 6px 8px;
-    border-radius: 10px;
-  }
-  
-  .add-charger-text {
-    font-size: 14px;
-  }
-  
-  .charging-stations-grid {
-    gap: 0.75rem;
+  .charging-stations-empty-horizontal {
+    min-width: 320px;
+    padding: 40px 16px;
+    min-height: 250px;
   }
 }
 
-/* Large phones: 481px - 767px */
-@media (min-width: 481px) and (max-width: 767px) {
+@media (max-width: 480px) {
+  .charging-stations-grid-horizontal-scroll > * {
+    width: 280px;
+    min-width: 280px;
+  }
+  
+  .charging-stations-empty-horizontal {
+    min-width: 280px;
+    padding: 40px 16px;
+    min-height: 250px;
+  }
+  
+  .empty-state-icon {
+    font-size: 36px;
+  }
+  
+  .charging-stations-empty-horizontal h3 {
+    font-size: 18px;
+  }
+}
+
+/* Loading Skeleton */
+.charger-card-skeleton {
+  background: #f3f4f6;
+  border-radius: 16px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Empty State */
+.charging-stations-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  border: 2px dashed #e5e7eb;
+  min-height: 300px;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.charging-stations-empty h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.charging-stations-empty p {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+  max-width: 300px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .charging-stations-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .charging-stations-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .charging-stations-add-btn {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
   .charging-stations-title {
     font-size: 20px;
   }
   
-  .charging-stations-add-btn {
-    width: 140px;
-    height: 38px;
-    padding: 7px 9px;
-    border-radius: 11px;
+  .charging-stations-empty {
+    padding: 40px 16px;
+    min-height: 250px;
   }
   
-  .add-charger-text {
-    font-size: 15px;
+  .empty-state-icon {
+    font-size: 36px;
   }
   
-  .charging-stations-grid {
-    gap: 1rem;
+  .charging-stations-empty h3 {
+    font-size: 18px;
   }
 }
-
-/* Tablets: 768px - 1024px */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .charging-stations-header {
-    margin-bottom: 1.5rem;
-  }
-  
-  .charging-stations-title {
-    font-size: 22px;
-  }
-  
-  .charging-stations-add-btn {
-    width: 150px;
-    height: 40px;
-    padding: 8px 10px;
-    border-radius: 12px;
-  }
-  
-  .add-charger-text {
-    font-size: 16px;
-  }
-  
-  .charging-stations-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.25rem;
-  }
-}
-
-/* Tablets landscape & Desktop: 1025px+ */
-@media (min-width: 1025px) {
-  .charging-stations-header {
-    margin-bottom: 1.5rem;
-  }
-  
-  .charging-stations-title {
-    font-size: 24px;
-  }
-  
-  .charging-stations-add-btn {
-    width: 150px;
-    height: 40px;
-    padding: 8px 10px;
-    border-radius: 12px;
-  }
-  
-  .add-charger-text {
-    font-size: 16px;
-  }
-  
-  .charging-stations-grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 1.5rem;
-  }
-}
-

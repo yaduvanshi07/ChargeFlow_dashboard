@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { MapPin, Zap, Plug, IndianRupee, Star } from "lucide-react";
+import { MapPin, Zap, Plug, IndianRupee, Star, ChevronDown, Bell, BellOff } from "lucide-react";
 import "./stats.css";
 
 interface ChargerCardProps {
-  id: number;
+  id: string;
   name: string;
   location: string;
   image: string;
@@ -17,9 +17,14 @@ interface ChargerCardProps {
   rating: number;
   sessions: number;
   isOnline: boolean;
+  type: string;
+  status: string;
+  power?: number;
+  onEdit?: (charger: ChargerCardProps) => void;
 }
 
 export default function ChargerCard({
+  id,
   name,
   location,
   image,
@@ -30,8 +35,14 @@ export default function ChargerCard({
   rating,
   sessions,
   isOnline,
+  type,
+  status,
+  power,
+  onEdit,
 }: ChargerCardProps) {
-  const [onlineStatus, setOnlineStatus] = useState(isOnline);
+  const [selectedStatus, setSelectedStatus] = useState<"online" | "offline" | "maintenance">(isOnline ? "online" : "offline");
+  const [isAlertActive, setIsAlertActive] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   // Create an array of 3 images for the carousel
   const allImages = ['/ch.jpg', '/ev.avif', '/evch.jpg'];
@@ -54,46 +65,124 @@ export default function ChargerCard({
     return () => clearInterval(interval);
   }, [images.length]);
 
+  const statusConfig = {
+    online: { color: "rgba(56, 239, 10, 1)", label: "Online" },
+    offline: { color: "#FF3B30", label: "Offline" },
+    maintenance: { color: "#FF9500", label: "Maintenance" },
+  };
+
+  const handleStatusChange = (status: "online" | "offline" | "maintenance") => {
+    if (!isAlertActive) {
+      setSelectedStatus(status);
+      setIsDropdownOpen(false);
+    }
+  };
+
+  const handleEditClick = () => {
+    if (onEdit) {
+      onEdit({
+        id,
+        name,
+        location,
+        image,
+        chargingSpeed,
+        connectorType,
+        pricePerKWh,
+        utilization,
+        rating,
+        sessions,
+        isOnline,
+        type,
+        status,
+        power,
+        onEdit
+      });
+    }
+  };
+
   return (
     <div className="charger-card">
-      {/* Header with Online Status and Edit Icon */}
+      {/* Header with Alert Button, Status Dropdown, and Edit Icon */}
       <div className="charger-card-header">
-        {/* Online Status - NO BOX */}
-        <div className="charger-card-status">
-          <span 
-            className="charger-card-status-text" 
-            style={{
-              color: onlineStatus ? "rgba(56, 239, 10, 1)" : "#8E8E93",
-            }}
-          >
-            {onlineStatus ? "Online" : "Offline"}
-          </span>
-          <button
-            onClick={() => setOnlineStatus(!onlineStatus)}
-            className="relative inline-flex h-4 w-7 md:h-5 md:w-9 items-center rounded-full transition-colors"
-            style={
-              onlineStatus
-                ? { backgroundColor: "rgba(56, 239, 10, 1)" }
-                : { backgroundColor: "#E5E5EA" }
+        {/* Alert Button */}
+        <button
+          onClick={() => {
+            setIsAlertActive(!isAlertActive);
+            if (!isAlertActive) {
+              setIsDropdownOpen(false);
             }
+          }}
+          className={`alert-button ${isAlertActive ? 'active' : ''}`}
+        >
+          {isAlertActive ? (
+            <Bell style={{ width: "1rem", height: "1rem" }} />
+          ) : (
+            <BellOff style={{ width: "1rem", height: "1rem" }} />
+          )}
+        </button>
+
+        <div className="charging-stations-controls">
+          {/* Status Dropdown */}
+          <div className="status-dropdown-container">
+            <button
+              onClick={() => !isAlertActive && setIsDropdownOpen(!isDropdownOpen)}
+              className="status-dropdown-button"
+              style={{
+                backgroundColor: statusConfig[selectedStatus].color,
+                opacity: isAlertActive ? 0.5 : 1,
+              }}
+              disabled={isAlertActive}
+            >
+              <span>{statusConfig[selectedStatus].label}</span>
+              <ChevronDown
+                style={{
+                  width: "1rem",
+                  height: "1rem",
+                  transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 0.2s",
+                }}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isDropdownOpen && !isAlertActive && (
+              <div className="status-dropdown-menu">
+                {(Object.keys(statusConfig) as Array<keyof typeof statusConfig>).map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => handleStatusChange(status)}
+                    className={`status-dropdown-option ${selectedStatus === status ? 'selected' : ''}`}
+                    style={{
+                      color: statusConfig[status].color,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "0.5rem",
+                        height: "0.5rem",
+                        borderRadius: "50%",
+                        backgroundColor: statusConfig[status].color,
+                      }}
+                    />
+                    {statusConfig[status].label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Edit Icon */}
+          <button 
+            className="charger-card-edit-btn"
+            onClick={handleEditClick}
           >
-            <span
-              className={`inline-block h-3 w-3 md:h-3.5 md:w-3.5 transform rounded-full bg-white transition-transform ${
-                onlineStatus ? "translate-x-4 md:translate-x-5" : "translate-x-0.5 md:translate-x-1"
-              }`}
-              style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)" }}
+            <img 
+              src="https://api.iconify.design/material-symbols:edit-outline.svg?color=%238E8E93"
+              alt="Edit"
+              style={{ width: "20px", height: "20px" }}
             />
           </button>
         </div>
-
-        {/* Edit Icon */}
-        <button className="charger-card-edit-btn">
-          <img 
-            src="https://api.iconify.design/material-symbols:edit-outline.svg?color=%238E8E93"
-            alt="Edit"
-            style={{ width: "20px", height: "20px" }}
-          />
-        </button>
       </div>
 
       {/* Charger Image Carousel */}
@@ -214,7 +303,7 @@ export default function ChargerCard({
               margin: 0,
               marginBottom: "4px",
             }}>
-              {rating}
+              {rating.toFixed(1)}
             </p>
             <div style={{
               display: "flex",

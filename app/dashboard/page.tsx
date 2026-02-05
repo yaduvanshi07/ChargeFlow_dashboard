@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
+import RevenueStatCards from "@/components/dashboard/stats/RevenueStatCards";
 import StatsCard from "@/components/dashboard/stats/StatsCard";
 import MetricCard from "@/components/dashboard/stats/MetricCard";
 import ActivityItem from "@/components/dashboard/activity/ActivityItem";
@@ -94,7 +95,7 @@ export default function DashboardPage() {
               };
               const Icon = iconMap[tab];
               const isMyChargers = tab === "My Chargers";
-              
+
               return (
                 <button
                   key={tab}
@@ -116,49 +117,30 @@ export default function DashboardPage() {
             })}
           </div>
 
-          {/* Stats Cards - MODIFICATION HERE */}
+          {/* Revenue Stats Cards + Rating Card */}
           <div className="stats-grid">
-            {statsData.map((stat, index) => {
-              // Icon mapping based on title
-              let iconName = "";
-              if (stat.title === "Total Earnings") {
-                iconName = "fluent:arrow-growth-24-filled";
-              } else if (stat.title === "Active Chargers") {
-                iconName = "material-symbols:ev-charger-rounded";
-              } else if (stat.title === "Total Sessions") {
-                iconName = "bxs:calendar-check";
-              } else if (stat.title === "Host Rating") {
-                iconName = "material-symbols-light:star-outline-rounded";
-              }
-              
-              return (
-                <StatsCard
-                  key={index}
-                  title={stat.title}
-                  value={stat.value}
-                  change={stat.change}
-                  subtitle={stat.subtitle}
-                  subtitleColor={
-                    stat.subtitle === "All Online" ? "text-green-600" : undefined
-                  }
-                  rating={stat.rating}
-                  icon={iconName}
-                />
-              );
-            })}
+            {/* Revenue Cards from Backend - 3 cards */}
+            <RevenueStatCards />
+            {/* Rating Card - Keep Original */}
+            <StatsCard
+              title="Host Rating"
+              value="4.7"
+              rating={4.7}
+              icon="material-symbols-light:star-outline-rounded"
+            />
           </div>
 
           {/* Main Content Grid */}
           <div className="content-grid-3col">
             {/* Revenue Analytics */}
-            <div 
+            <div
               className="revenue-card-wrapper"
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="revenue-analytics-title">
                   Revenue Analytics
                 </h2>
-                <select 
+                <select
                   className="px-3 py-1.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none cursor-pointer revenue-select"
                 >
                   <option>This Month</option>
@@ -173,7 +155,7 @@ export default function DashboardPage() {
 
             {/* Performance Metrics */}
             <div className="performance-metrics-card">
-              <h2 
+              <h2
                 className="performance-metrics-title"
               >
                 Performance Metrics
@@ -196,36 +178,36 @@ export default function DashboardPage() {
 
           {/* Bottom Section */}
           <div className="content-grid-2col">
-          {/* Recent Activity */}
-<div className="activity-section">
-  <div className="recent-activity-header">
-    <h2 className="activity-section-title">Recent Activity</h2>
-   
-  </div>
-  <div className="space-y-3">
-    {recentActivities.map((activity, index) => (
-      <ActivityItem
-        key={index}
-        type={activity.type}
-        title={activity.title}
-        details={activity.details}
-        time={activity.time}
-        amount={activity.amount}
-        rating={activity.rating}
-      />
-    ))}
-  </div>
-</div>
+            {/* Recent Activity */}
+            <div className="activity-section">
+              <div className="recent-activity-header">
+                <h2 className="activity-section-title">Recent Activity</h2>
+
+              </div>
+              <div className="space-y-3">
+                {recentActivities.map((activity, index) => (
+                  <ActivityItem
+                    key={index}
+                    type={activity.type}
+                    title={activity.title}
+                    details={activity.details}
+                    time={activity.time}
+                    amount={activity.amount}
+                    rating={activity.rating}
+                  />
+                ))}
+              </div>
+            </div>
 
             {/* Today's Bookings */}
-            <div 
+            <div
               className="bookings-section"
             >
-              <h2 
+              <h2
                 className="bookings-section-title"
               >
                 Today&apos;s Bookings
-              </h2>         
+              </h2>
               <div className="space-y-3 bookings-scrollable">
                 {todaysBookings.map((booking, index) => (
                   <BookingItem

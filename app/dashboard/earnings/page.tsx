@@ -19,9 +19,7 @@ import StatsCard from "@/components/dashboard/stats/StatsCard";
 import EarningsOverview from "@/components/dashboard/charts/EarningsOverview";
 import RecentTransactions from "@/components/dashboard/activity/RecentTransactions";
 import Footer from "@/components/common/Footer";
-import {
-  statsData,
-} from "@/lib/mockData";
+import RevenueStatCards from "@/components/dashboard/stats/RevenueStatCards";
 import { useUser } from "@/contexts/UserContext";
 
 // Icon mapping for performance metrics
@@ -78,110 +76,90 @@ export default function EarningsPage() {
 
           {/* Tabs Section */}
           <div className="earnings-tabs">
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab;
-            // Icon mapping for each tab
-            const iconMap: { [key: string]: React.ComponentType<any> } = {
-              "Overview": FileText,
-              "Bookings": CalendarCheck,
-              "Earnings": HandCoins,
-              "Wallet": Wallet,
-              "Reviews": MessageSquare,
-            };
-            const Icon = iconMap[tab];
-            const isMyChargers = tab === "My Chargers";
-            
-            return (
-              <button
-                key={tab}
-                onClick={() => handleTabClick(tab)}
-                className="earnings-tab"
-                style={{
-                  backgroundColor: isActive ? 'rgba(56, 239, 10, 1)' : 'white',
-                  color: isActive ? 'white' : '#374151',
-                  boxShadow: isActive ? 'none' : '0px 1px 2px rgba(0, 0, 0, 0.1)',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.backgroundColor = 'white';
-                  }
-                }}
-              >
-                {isMyChargers ? (
-                  <span 
-                    className="material-symbols-rounded tab-icon"
-                    style={{
-                      color: isActive ? 'white' : '#374151',
-                    }}
-                  >
-                    ev_charger
-                  </span>
-                ) : (
-                  Icon && (
-                    <Icon 
-                      className="tab-icon"
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab;
+              // Icon mapping for each tab
+              const iconMap: { [key: string]: React.ComponentType<any> } = {
+                "Overview": FileText,
+                "Bookings": CalendarCheck,
+                "Earnings": HandCoins,
+                "Wallet": Wallet,
+                "Reviews": MessageSquare,
+              };
+              const Icon = iconMap[tab];
+              const isMyChargers = tab === "My Chargers";
+
+              return (
+                <button
+                  key={tab}
+                  onClick={() => handleTabClick(tab)}
+                  className="earnings-tab"
+                  style={{
+                    backgroundColor: isActive ? 'rgba(56, 239, 10, 1)' : 'white',
+                    color: isActive ? 'white' : '#374151',
+                    boxShadow: isActive ? 'none' : '0px 1px 2px rgba(0, 0, 0, 0.1)',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'white';
+                    }
+                  }}
+                >
+                  {isMyChargers ? (
+                    <span
+                      className="material-symbols-rounded tab-icon"
                       style={{
                         color: isActive ? 'white' : '#374151',
                       }}
-                    />
-                  )
-                )}
-                {tab}
-              </button>
-            );
-          })}
-        </div>
+                    >
+                      ev_charger
+                    </span>
+                  ) : (
+                    Icon && (
+                      <Icon
+                        className="tab-icon"
+                        style={{
+                          color: isActive ? 'white' : '#374151',
+                        }}
+                      />
+                    )
+                  )}
+                  {tab}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statsData.map((stat, index) => {
-            let iconName = "";
-            if (stat.title === "Total Earnings") {
-              iconName = "fluent:arrow-growth-24-filled";
-            } else if (stat.title === "Active Chargers") {
-              iconName = "material-symbols:ev-charger-rounded";
-            } else if (stat.title === "Total Sessions") {
-              iconName = "bxs:calendar-check";
-            } else if (stat.title === "Host Rating") {
-              iconName = "material-symbols-light:star-outline-rounded";
-            }
-            
-            return (
-              <StatsCard
-                key={index}
-                title={stat.title}
-                value={stat.value}
-                change={stat.change}
-                subtitle={stat.subtitle}
-                subtitleColor={
-                  stat.subtitle === "All Online" ? "text-green-600" : undefined
-                }
-                rating={stat.rating}
-                icon={iconName}
-              />
-            );
-          })}
-        </div>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <RevenueStatCards />
+            <StatsCard
+              title="Host Rating"
+              value="4.7"
+              rating={4.7}
+              icon="material-symbols-light:star-outline-rounded"
+            />
+          </div>
 
-        {/* Earnings Content */}
-        <div className="mb-6">
-          <EarningsOverview />
-        </div>
+          {/* Earnings Content */}
+          <div className="mb-6">
+            <EarningsOverview />
+          </div>
 
-        {/* Recent Transactions */}
-        <div className="mb-8">
-          <RecentTransactions />
-        </div>
-      </main>
+          {/* Recent Transactions */}
+          <div className="mb-8">
+            <RecentTransactions />
+          </div>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
     </>
   );
 }

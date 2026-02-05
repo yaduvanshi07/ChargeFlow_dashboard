@@ -145,7 +145,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-top: 20px;
-  margin-left:182px;
+  margin-left: 182px;
 }
 
 .export-download-btn:hover:not(:disabled) {
@@ -158,19 +158,82 @@
   cursor: not-allowed;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Tablet Responsive (481px - 1024px) */
+@media (max-width: 1024px) and (min-width: 481px) {
   .export-data-container {
-    padding: 16px;
+    margin: 0 16px;
+    padding: 18px;
+    max-width: 100%;
+  }
+
+  .export-data-title {
+    font-size: 22px;
+    margin-bottom: 40px;
+  }
+
+  .export-time-range {
+    margin-bottom: 40px;
+    margin-left: 0;
+  }
+
+  .export-time-range-buttons {
+    gap: 16px;
+    justify-content: flex-start;
+  }
+
+  .export-time-range-btn {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 140px;
+    max-width: 48%;
+  }
+
+  .export-format-label {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .export-format-options {
+    gap: 16px;
+    justify-content: flex-start;
+  }
+
+  .export-format-option {
+    width: 75px;
+    height: 75px;
+  }
+
+  .export-format-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .export-format-text {
+    font-size: 14px;
+  }
+
+  .export-download-btn {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 24px;
+  }
+}
+
+/* Mobile Responsive (up to 480px) */
+@media (max-width: 480px) {
+  .export-data-container {
+    margin: 0 12px;
+    padding: 16px 12px;
   }
 
   .export-data-title {
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 32px;
   }
 
   .export-time-range {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+    margin-left: 0;
   }
 
   .export-time-range-buttons {
@@ -181,6 +244,13 @@
   .export-time-range-btn {
     width: 100%;
     min-width: unset;
+    max-width: 100%;
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .export-format-section {
+    margin-bottom: 32px;
   }
 
   .export-format-label {
@@ -189,17 +259,76 @@
   }
 
   .export-format-options {
+    gap: 12px;
     justify-content: flex-start;
   }
 
+  .export-format-option {
+    width: 70px;
+    height: 70px;
+  }
+
+  .export-format-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .export-format-text {
+    font-size: 13px;
+  }
+
   .export-download-btn {
-    width: 100%;
     max-width: 100%;
+    margin-left: 0;
+    margin-top: 20px;
+    height: 48px;
+    font-size: 15px;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Extra Small Mobile (up to 360px) */
+@media (max-width: 360px) {
   .export-data-container {
-    padding: 18px;
+    margin: 0 8px;
+    padding: 14px 10px;
+  }
+
+  .export-data-title {
+    font-size: 18px;
+    margin-bottom: 28px;
+  }
+
+  .export-time-range {
+    margin-bottom: 28px;
+  }
+
+  .export-time-range-btn {
+    height: 46px;
+    font-size: 13px;
+    padding: 12px 8px;
+  }
+
+  .export-format-label {
+    font-size: 16px;
+  }
+
+  .export-format-option {
+    width: 65px;
+    height: 65px;
+  }
+
+  .export-format-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .export-format-text {
+    font-size: 12px;
+  }
+
+  .export-download-btn {
+    height: 46px;
+    font-size: 14px;
+    padding: 14px 20px;
   }
 }

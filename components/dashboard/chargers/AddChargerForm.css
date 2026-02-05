@@ -1,0 +1,392 @@
+/* Add Charger Form Styles */
+.add-charger-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Modern backdrop blur could be nice but simple overlay is requested */
+  backdrop-filter: blur(4px);
+  /* Glass effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.add-charger-form-container {
+  background: white;
+  border-radius: 24px;
+  /* More modern rounded corners */
+  width: 100%;
+  max-width: 520px;
+  /* Slightly wider */
+  max-height: 90vh;
+  overflow-y: auto;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  /* Soft, modern shadow */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.add-charger-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+  /* Balanced padding */
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.add-charger-form-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 22px;
+  /* Slightly larger */
+  font-weight: 600;
+  color: #111827;
+  /* Darker text */
+  margin: 0;
+}
+
+.add-charger-form-close-btn {
+  background: #f3f4f6;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  /* Circle button */
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-charger-form-close-btn:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  color: #1f2937;
+  transform: rotate(90deg);
+  /* Playful interaction */
+}
+
+.add-charger-form-close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.add-charger-form-error {
+  margin: 16px 32px 0;
+  padding: 12px 16px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #dc2626;
+  font-size: 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-charger-form {
+  padding: 24px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  /* Increased separation */
+}
+
+.add-charger-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-charger-form-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  /* Softer text color */
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.add-charger-form-input,
+.add-charger-form-select {
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  /* Subtler border */
+  border-radius: 12px;
+  /* Modern radius */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: #111827;
+  background-color: #f9fafb;
+  /* Light background */
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.add-charger-form-input:hover,
+.add-charger-form-select:hover {
+  background-color: #fff;
+  border-color: #d1d5db;
+}
+
+.add-charger-form-input:focus,
+.add-charger-form-select:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: #38ef0a;
+  box-shadow: 0 0 0 4px rgba(56, 239, 10, 0.1);
+}
+
+.add-charger-form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Image Upload Styling */
+.image-upload-container {
+  width: 100%;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.image-upload-label {
+  display: block;
+  width: 100%;
+  height: 160px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.image-upload-label:hover {
+  border-color: #38ef0a;
+  background-color: rgba(56, 239, 10, 0.02);
+}
+
+.image-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6b7280;
+  gap: 8px;
+}
+
+.upload-icon {
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.upload-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.upload-subtext {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.image-preview-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: white;
+  gap: 8px;
+}
+
+.image-preview-wrapper:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-overlay span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Price Input Specifics */
+.price-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.price-input-container .add-charger-form-input {
+  padding-right: 70px;
+  /* Space for suffix */
+}
+
+.input-suffix {
+  position: absolute;
+  right: 16px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.add-charger-form-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 0 4px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  opacity: 0.8;
+}
+
+.add-charger-form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.add-charger-form-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.01em;
+}
+
+.add-charger-form-btn-cancel {
+  background-color: #fff;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.add-charger-form-btn-cancel:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.add-charger-form-btn-submit {
+  background: linear-gradient(135deg, #38ef0a 0%, #2bc205 100%);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(56, 239, 10, 0.3);
+}
+
+.add-charger-form-btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(56, 239, 10, 0.4);
+}
+
+.add-charger-form-btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.add-charger-form-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.add-charger-form-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .add-charger-form-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .add-charger-form-container {
+    max-width: 100%;
+    max-height: 85vh;
+    margin: 0;
+    border-radius: 24px 24px 0 0;
+    /* Bottom sheet style */
+    animation: slideUpMobile 0.3s ease-out;
+  }
+
+  @keyframes slideUpMobile {
+    from {
+      transform: translateY(100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .add-charger-form-header {
+    padding: 20px 24px;
+  }
+
+  .add-charger-form {
+    padding: 24px;
+  }
+
+  .add-charger-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .add-charger-form-btn {
+    width: 100%;
+  }
+}

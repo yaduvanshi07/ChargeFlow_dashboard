@@ -18,9 +18,7 @@ import DashboardHeader from "@/components/common/DashboardHeader";
 import StatsCard from "@/components/dashboard/stats/StatsCard";
 import MyChargingStations from "@/components/dashboard/chargers/MyChargingStations";
 import Footer from "@/components/common/Footer";
-import {
-  statsData,
-} from "@/lib/mockData";
+import RevenueStatCards from "@/components/dashboard/stats/RevenueStatCards";
 import { useUser } from "@/contexts/UserContext";
 
 // Icon mapping for performance metrics
@@ -89,7 +87,7 @@ export default function MyChargersPage() {
               };
               const Icon = iconMap[tab];
               const isMyChargers = tab === "My Chargers";
-              
+
               return (
                 <button
                   key={tab}
@@ -111,7 +109,7 @@ export default function MyChargersPage() {
                   }}
                 >
                   {isMyChargers ? (
-                    <span 
+                    <span
                       className="material-symbols-rounded tab-icon"
                       style={{
                         color: isActive ? 'white' : '#374151',
@@ -121,7 +119,7 @@ export default function MyChargersPage() {
                     </span>
                   ) : (
                     Icon && (
-                      <Icon 
+                      <Icon
                         className="tab-icon"
                         style={{
                           color: isActive ? 'white' : '#374151',
@@ -137,33 +135,13 @@ export default function MyChargersPage() {
 
           {/* Stats Cards */}
           <div className="stats-grid">
-            {statsData.map((stat, index) => {
-              let iconName = "";
-              if (stat.title === "Total Earnings") {
-                iconName = "fluent:arrow-growth-24-filled";
-              } else if (stat.title === "Active Chargers") {
-                iconName = "material-symbols:ev-charger-rounded";
-              } else if (stat.title === "Total Sessions") {
-                iconName = "bxs:calendar-check";
-              } else if (stat.title === "Host Rating") {
-                iconName = "material-symbols-light:star-outline-rounded";
-              }
-              
-              return (
-                <StatsCard
-                  key={index}
-                  title={stat.title}
-                  value={stat.value}
-                  change={stat.change}
-                  subtitle={stat.subtitle}
-                  subtitleColor={
-                    stat.subtitle === "All Online" ? "text-green-600" : undefined
-                  }
-                  rating={stat.rating}
-                  icon={iconName}
-                />
-              );
-            })}
+            <RevenueStatCards />
+            <StatsCard
+              title="Host Rating"
+              value="4.7"
+              rating={4.7}
+              icon="material-symbols-light:star-outline-rounded"
+            />
           </div>
 
           {/* My Charging Stations Component */}

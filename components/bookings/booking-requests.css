@@ -14,25 +14,34 @@
 }
 
 .booking-requests-wrapper {
-  width: 1256px;
-  height: 488px;
+  width: 100%;
+  max-width: 1256px;
   border-radius: 15px;
   background: #FFFFFF;
   box-shadow: 0px 3px 7.1px 0px rgba(0, 0, 0, 0.12);
-  opacity: 1;
   padding: 20px;
-  overflow: hidden;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.booking-requests-wrapper::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .booking-requests-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 20px;
-  width: 100%;
-  height: 100%;
 }
 
 .booking-request-card {
+  min-width: 359px;
   width: 359px;
   height: 434px;
   background: white;
@@ -43,6 +52,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  flex-shrink: 0;
 }
 
 .booking-request-header {
@@ -164,6 +174,12 @@
   width: 100%;
 }
 
+.amount-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .booking-info-item.amount-row .amount-text {
   display: flex;
   align-items: center;
@@ -198,15 +214,30 @@
   flex-shrink: 0;
 }
 
+.booking-info-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .booking-info-item svg {
   flex-shrink: 0;
+}
+
+.booking-info-label {
+  white-space: nowrap;
+}
+
+.booking-info-value {
+  white-space: nowrap;
 }
 
 .booking-request-amenities {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-left:48px;
+  margin-left: 48px;
   margin-bottom: 16px;
 }
 
@@ -251,7 +282,7 @@
 }
 
 .booking-cancel-btn:hover {
-  background: #FF0707;
+  background: #cc0606;
 }
 
 .booking-accept-btn {
@@ -273,87 +304,91 @@
 }
 
 .booking-accept-btn:hover {
-  background:#2CDE00;
+  background: #24b500;
 }
 
-/* Responsive Styles - Small phones: 320px - 480px */
-@media (min-width: 320px) and (max-width: 480px) {
-  .booking-requests-wrapper {
-    width: 100%;
-    height: auto;
-  }
+/* Responsive Styles - All maintain horizontal scroll */
 
-  .booking-requests-cards {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+/* Small phones: 320px - 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+ 
+
+ 
+  
 
   .booking-request-card {
-    width: 100%;
-    height: auto;
-    min-height: 400px;
+   max-width:250px !important;   
   }
 
   .booking-request-image-container {
-    width: 100%;
+    width: 50px;/* Changed from 40px */
+    margin: 12px 15px 0 15px;   
+    height: 120px;             
+  }
+
+  .booking-request-details {
+    padding: 0 15px; 
+  }
+
+  .booking-request-actions {
+    padding: 0 15px 12px 15px;  
   }
 }
 
 /* Large phones: 481px - 767px */
 @media (min-width: 481px) and (max-width: 767px) {
+  .booking-requests-container {
+    padding: 0 16px;
+  }
+
   .booking-requests-wrapper {
-    width: 100%;
-    height: auto;
+    padding: 18px;
   }
 
   .booking-requests-cards {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 18px;
   }
 
   .booking-request-card {
-    width: 100%;
-    height: auto;
-    min-height: 400px;
+    min-width: 340px;
+    width: 340px;
   }
 
   .booking-request-image-container {
-    width: 100%;
+    width: 290px;
+    margin: 17px auto 0;
   }
 }
 
 /* Tablets: 768px - 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
   .booking-requests-wrapper {
-    width: 100%;
-    height: auto;
+    max-width: 100%;
+    padding: 20px;
   }
 
   .booking-requests-cards {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 
   .booking-request-card {
-    width: 100%;
-    max-width: 359px;
-    margin: 0 auto;
+    min-width: 359px;
+    width: 359px;
   }
 }
 
 /* Desktop: 1025px+ */
 @media (min-width: 1025px) {
   .booking-requests-wrapper {
-    width: 1256px;
-    height: 488px;
+    max-width: 1256px;
   }
 
   .booking-requests-cards {
-    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
 
   .booking-request-card {
-    width: 100%;
-    max-width: 359px;
+    min-width: 359px;
+    width: 359px;
   }
 }

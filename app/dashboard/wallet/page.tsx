@@ -21,7 +21,7 @@ import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
 import StatsCard from "@/components/dashboard/stats/StatsCard";
 import Footer from "@/components/common/Footer";
-import { statsData } from "@/lib/mockData";
+import RevenueStatCards from "@/components/dashboard/stats/RevenueStatCards";
 import { useUser } from "@/contexts/UserContext";
 import "@/styles/pages/wallet.css";
 
@@ -79,105 +79,85 @@ export default function WalletPage() {
 
           {/* Tabs Section */}
           <div className="dashboard-tabs">
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab;
-            // Icon mapping for each tab
-            const iconMap: { [key: string]: React.ComponentType<any> } = {
-              "Overview": FileText,
-              "Bookings": CalendarCheck,
-              "Earnings": HandCoins,
-              "Reviews": MessageSquare,
-            };
-            const Icon = iconMap[tab];
-            const isMyChargers = tab === "My Chargers";
-            const isWallet = tab === "Wallet";
-            
-            return (
-              <button
-                key={tab}
-                onClick={() => handleTabClick(tab)}
-                className="dashboard-tab flex items-center gap-1 md:gap-2 font-medium transition-all rounded-lg"
-                style={{
-                  backgroundColor: isActive ? 'rgba(56, 239, 10, 1)' : 'white',
-                  color: isActive ? 'white' : '#374151',
-                  boxShadow: isActive ? 'none' : '0px 1px 2px rgba(0, 0, 0, 0.1)',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.backgroundColor = 'white';
-                  }
-                }}
-              >
-                {isMyChargers ? (
-                  <span 
-                    className="material-symbols-rounded"
-                    style={{
-                      fontSize: '20px',
-                      color: isActive ? 'white' : '#374151',
-                    }}
-                  >
-                    ev_charger
-                  </span>
-                ) : isWallet ? (
-                  <Wallet 
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      color: isActive ? 'white' : '#374151',
-                    }}
-                  />
-                ) : (
-                  Icon && (
-                    <Icon 
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab;
+              // Icon mapping for each tab
+              const iconMap: { [key: string]: React.ComponentType<any> } = {
+                "Overview": FileText,
+                "Bookings": CalendarCheck,
+                "Earnings": HandCoins,
+                "Reviews": MessageSquare,
+              };
+              const Icon = iconMap[tab];
+              const isMyChargers = tab === "My Chargers";
+              const isWallet = tab === "Wallet";
+
+              return (
+                <button
+                  key={tab}
+                  onClick={() => handleTabClick(tab)}
+                  className="dashboard-tab flex items-center gap-1 md:gap-2 font-medium transition-all rounded-lg"
+                  style={{
+                    backgroundColor: isActive ? 'rgba(56, 239, 10, 1)' : 'white',
+                    color: isActive ? 'white' : '#374151',
+                    boxShadow: isActive ? 'none' : '0px 1px 2px rgba(0, 0, 0, 0.1)',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'white';
+                    }
+                  }}
+                >
+                  {isMyChargers ? (
+                    <span
+                      className="material-symbols-rounded"
+                      style={{
+                        fontSize: '20px',
+                        color: isActive ? 'white' : '#374151',
+                      }}
+                    >
+                      ev_charger
+                    </span>
+                  ) : isWallet ? (
+                    <Wallet
                       style={{
                         width: '20px',
                         height: '20px',
                         color: isActive ? 'white' : '#374151',
                       }}
                     />
-                  )
-                )}
-                {tab}
-              </button>
-            );
-          })}
+                  ) : (
+                    Icon && (
+                      <Icon
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          color: isActive ? 'white' : '#374151',
+                        }}
+                      />
+                    )
+                  )}
+                  {tab}
+                </button>
+              );
+            })}
           </div>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {statsData.map((stat, index) => {
-              let iconName = "";
-              if (stat.title === "Total Earnings") {
-                iconName = "fluent:arrow-growth-24-filled";
-              } else if (stat.title === "Active Chargers") {
-                iconName = "material-symbols:ev-charger-rounded";
-              } else if (stat.title === "Total Sessions") {
-                iconName = "bxs:calendar-check";
-              } else if (stat.title === "Host Rating") {
-                iconName = "material-symbols-light:star-outline-rounded";
-              }
-
-              return (
-                <StatsCard
-                  key={index}
-                  title={stat.title}
-                  value={stat.value}
-                  change={stat.change}
-                  subtitle={stat.subtitle}
-                  subtitleColor={
-                    stat.subtitle === "All Online" ? "text-green-600" : undefined
-                  }
-                  rating={stat.rating}
-                  icon={iconName}
-                />
-              );
-            })}
+            <RevenueStatCards />
+            <StatsCard
+              title="Host Rating"
+              value="4.7"
+              rating={4.7}
+              icon="material-symbols-light:star-outline-rounded"
+            />
           </div>
 
           {/* Wallet Content */}
@@ -190,7 +170,7 @@ export default function WalletPage() {
                 <div className="wallet-balance-container">
                   {/* Wallet Icon */}
                   <div className="wallet-icon-wrapper">
-                    <Wallet 
+                    <Wallet
                       className="wallet-icon"
                       style={{
                         width: '36px',
@@ -206,8 +186,11 @@ export default function WalletPage() {
                   </div>
                 </div>
                 {/* Add Money Button - Aligned with text */}
-                <button className="wallet-add-money-btn">
-                  <Plus style={{ width: '28px', height: '28px'}} />
+                <button
+                  className="wallet-add-money-btn"
+                  onClick={() => console.log('Add Money functionality not implemented')}
+                >
+                  <Plus style={{ width: '28px', height: '28px' }} />
                   Add Money
                 </button>
               </div>
@@ -227,7 +210,7 @@ export default function WalletPage() {
                     <div key={index} className="transaction-table-row">
                       <span className="transaction-date">{transaction.date}</span>
                       <span className="transaction-description">{transaction.description}</span>
-                      <span 
+                      <span
                         className="transaction-amount"
                         style={{
                           background: 'transparent',

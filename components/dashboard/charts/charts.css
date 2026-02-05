@@ -285,14 +285,19 @@
     margin-bottom: 0.75rem;
   }
 
-  .earnings-chart-container {
-    height: 20vh;
-    min-height: 150px;
-    max-height: 200px;
-    padding-left: 1rem;
+ .earnings-chart-container {
+    height: 180px; /* Fixed height instead of vh */
+    min-height: 180px;
+    max-height: 180px;
+    padding-left: 1.5rem; /* Increased from 1rem */
     padding-bottom: 1rem;
+    padding-right: 0.5rem; /* Add right padding */
   }
-
+ /* Add these new styles for better chart display */
+  .earnings-chart-container svg {
+    max-width: 100%;
+    height: auto;
+  }
   .this-month-card {
     width: 100%;
     max-width: 100%;

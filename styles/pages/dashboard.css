@@ -178,22 +178,34 @@
 }
 
 /* Responsive Styles */
-@media (min-width: 768px) {
+/* Responsive Styles */
+@media (min-width: 768px) and (max-width: 1024px) {
   .dashboard-main {
     padding: 24px 32px;
   }
 
   .dashboard-tabs {
-    gap: 12px;
+    gap: 8px;
     padding: 8px 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  .dashboard-tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .dashboard-tab {
-    min-width: 90px;
+    min-width: 100px;
     height: 48px;
     padding: 10px 12px;
     gap: 8px;
     font-size: 20px;
+    flex-shrink: 0;
   }
 
   .dashboard-tab .tab-icon {
@@ -267,7 +279,9 @@
     gap: 12px;
     padding: 8px 10px;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: flex-start; /* Changed from space-between */
+    overflow-x: auto; /* Add this */
+    -webkit-overflow-scrolling: touch; /* Add this */
   }
 
   .dashboard-tab {
@@ -304,8 +318,8 @@
   }
 
   .performance-metrics-card {
-    width: 620px;
-    max-width: 700px;
+    
+    max-width: 680px;
   }
 
   .performance-metrics-grid {
@@ -327,9 +341,10 @@
     gap: 20px;
   }
 
-  .dashboard-tab {
-    min-width: 110px;
-  }
+   .dashboard-tabs {
+      overflow-x: visible;
+      justify-content: space-between;
+    }
 }
 
 @media (max-width: 767px) {

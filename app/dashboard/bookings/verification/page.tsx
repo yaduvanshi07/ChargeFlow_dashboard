@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
 import BookingStats from "@/components/bookings/BookingStats";
 import Footer from "@/components/common/Footer";
 import { useUser } from "@/contexts/UserContext";
+import { bookingsAPI } from "@/lib/api";
 import "./verification.css";
-
-// Mock OTP for verification
-const CORRECT_OTP = "123456";
 
 function BookingTrackingContent() {
   const searchParams = useSearchParams();
@@ -23,12 +21,60 @@ function BookingTrackingContent() {
   const [showModal, setShowModal] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<"success" | "failed" | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [bookingData, setBookingData] = useState<any>(null);
+  const [verificationCompleted, setVerificationCompleted] = useState(false);
+  const verificationInProgress = useRef(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const bookingData = {
+  // Fetch booking data when component mounts or bookingId changes
+  useEffect(() => {
+    const fetchBookingData = async () => {
+      if (bookingId && bookingId.length === 24) {
+        try {
+          setLoading(true);
+          console.log('Fetching booking data for ID:', bookingId);
+          const data = await bookingsAPI.getBooking(bookingId);
+          console.log('Booking data fetched:', data);
+          setBookingData(data);
+
+          // Auto-generate OTP for ACCEPTED bookings (development only)
+          if (data.status === 'ACCEPTED') {
+            try {
+              console.log('Auto-generating OTP for ACCEPTED booking...');
+              const otpResult = await bookingsAPI.autoGenerateOTP(bookingId);
+              console.log('OTP auto-generation result:', otpResult);
+            } catch (otpError) {
+              console.error('Auto OTP generation failed:', otpError);
+              // Don't fail the page load if OTP generation fails
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching booking data:', error);
+          console.log('Available booking IDs for testing:');
+          console.log('- 507f1f77bcf86cd799439011 (ACCEPTED - Rahul Sharma)');
+          console.log('- 507f1f77bcf86cd799439012 (ACCEPTED - Priya Patel)');
+          console.log('- 507f1f77bcf86cd799439013 (PENDING - Amit Kumar)');
+          console.log('- 507f1f77bcf86cd799439014 (ACCEPTED - Test User)');
+          // Keep mock data as fallback
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        console.log('Invalid or missing bookingId:', bookingId);
+        console.log('Please use a valid 24-character MongoDB ObjectId');
+        setLoading(false);
+      }
+    };
+
+    fetchBookingData();
+  }, [bookingId]);
+
+  // Mock booking data (keep UI as before)
+  const mockBookingData = {
     stationName: "Premium Mall Charging Hub",
     vehicleModel: "Tata Nexon EV",
     vehicleNumber: "DLxxxxxx34",
@@ -62,23 +108,93 @@ function BookingTrackingContent() {
   // Verify OTP when all 6 digits are entered
   useEffect(() => {
     const otpString = otp.join("");
-    if (otpString.length === 6) {
-      // Verify OTP after a short delay for better UX
-      setTimeout(() => {
-        if (otpString === CORRECT_OTP) {
-          setVerificationStatus("success");
-          setShowModal(true);
+    
+    // Skip if verification is already completed, loading, OTP is not 6 digits, or verification is in progress
+    if (verificationCompleted || loading || otpString.length !== 6 || verificationInProgress.current) {
+      if (verificationInProgress.current) {
+        console.log('Skipping verification - already in progress');
+      }
+      return;
+    }
+    
+    const verifyOTP = async () => {
+      console.log('Starting OTP verification for:', bookingId);
+      verificationInProgress.current = true; // Mark as in progress
+      
+      try {
+        setLoading(true);
+        
+        // If bookingId is provided and valid, verify via backend API
+        if (bookingId && bookingId.length === 24) {
+          try {
+            console.log('📡 Calling verifyOTP API...');
+            await bookingsAPI.verifyOTP(bookingId, otpString);
+            console.log('✅ OTP verification successful!');
+            
+            // Success - OTP verified, database updated
+            setVerificationStatus("success");
+            setShowModal(true);
+            setVerificationCompleted(true); // Mark as completed
+            
+            // Dispatch events for dashboard updates
+            window.dispatchEvent(new Event('booking-verified'));
+            
+            // Dispatch session completion event
+            window.dispatchEvent(new CustomEvent('session-completed', {
+              detail: {
+                bookingId,
+                timestamp: new Date().toISOString(),
+                message: 'Session completed - charger should go offline'
+              }
+            }));
+            
+            // Dispatch charger status change event (charger goes offline after session)
+            window.dispatchEvent(new CustomEvent('charger-status-changed', {
+              detail: {
+                bookingId,
+                status: 'OFFLINE',
+                timestamp: new Date().toISOString(),
+                message: 'Charger status changed to offline after session completion'
+              }
+            }));
+            
+          } catch (err: any) {
+            console.log('OTP verification failed:', err.message);
+            // Failed - wrong OTP or error
+            setVerificationStatus("failed");
+            setShowModal(true);
+            // Don't set verificationCompleted on failure to allow retries
+          }
         } else {
+          console.log('No valid bookingId provided');
+          // No valid bookingId - show error but allow testing
           setVerificationStatus("failed");
           setShowModal(true);
         }
-      }, 500);
-    }
-  }, [otp]);
+      } catch (err: any) {
+        console.log('Unexpected error during verification:', err);
+        setVerificationStatus("failed");
+        setShowModal(true);
+      } finally {
+        setLoading(false);
+        verificationInProgress.current = false; // Reset the ref
+      }
+    };
+
+    // Add delay for better UX
+    const timeoutId = setTimeout(verifyOTP, 500);
+    return () => {
+      console.log('Cleaning up verification timeout');
+      clearTimeout(timeoutId);
+      verificationInProgress.current = false; // Reset on cleanup
+    };
+  }, [otp, bookingId, loading, verificationCompleted]);
 
   const handleTryAgain = () => {
     setShowModal(false);
     setVerificationStatus(null);
+    setVerificationCompleted(false); // Reset verification completed flag
+    verificationInProgress.current = false; // Reset the ref
     setOtp(["", "", "", "", "", ""]);
     // Focus first input
     setTimeout(() => {
@@ -90,7 +206,35 @@ function BookingTrackingContent() {
   const handleCloseSuccessModal = () => {
     setShowModal(false);
     setVerificationStatus(null);
+    
+    // Dispatch event to refresh dashboard stats
+    console.log('🚀 Dispatching booking-verified event...');
+    window.dispatchEvent(new CustomEvent('booking-verified', {
+      detail: {
+        bookingId,
+        timestamp: new Date().toISOString(),
+        message: 'OTP verification completed - refresh dashboard stats'
+      }
+    }));
+    console.log('✅ Event dispatched successfully');
+    
+    // Auto-redirect to dashboard after successful verification
+    console.log('🔄 Auto-redirecting to dashboard...');
+    setTimeout(() => {
+      router.push('/dashboard/bookings');
+    }, 2000); // 2 second delay to show success message
   };
+
+  // Auto-redirect on success modal show
+  useEffect(() => {
+    if (verificationStatus === "success" && showModal) {
+      const redirectTimer = setTimeout(() => {
+        handleCloseSuccessModal();
+      }, 3000); // 3 seconds to read success message
+      
+      return () => clearTimeout(redirectTimer);
+    }
+  }, [verificationStatus, showModal, bookingId]);
 
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
@@ -193,11 +337,36 @@ function BookingTrackingContent() {
             {/* Right Panel - Charging Hub Details */}
             <div className="booking-tracking-details">
               <div className="tracking-vehicle-image">
-                <img src={bookingData.vehicleImage} alt={bookingData.vehicleModel} />
+                <img src={bookingData?.vehicleImage || mockBookingData.vehicleImage} alt={bookingData?.vehicleModel || mockBookingData.vehicleModel} />
               </div>
-              <div className="tracking-vehicle-model">{bookingData.vehicleModel}</div>
+              <div className="tracking-vehicle-model">{bookingData?.vehicleModel || mockBookingData.vehicleModel}</div>
               
-              <h2 className="tracking-station-name">{bookingData.stationName}</h2>
+              <h2 className="tracking-station-name">{bookingData?.chargerName || mockBookingData.stationName}</h2>
+              
+              {/* Show booking status and helpful info */}
+              {bookingData ? (
+                <div style={{ 
+                  padding: "8px 12px", 
+                  backgroundColor: "#e8f5e8", 
+                  borderRadius: "6px", 
+                  marginBottom: "12px",
+                  fontSize: "12px",
+                  color: "#2d5a2d"
+                }}>
+                  ✅ Booking Found - Status: {bookingData.status}
+                </div>
+              ) : (
+                <div style={{ 
+                  padding: "8px 12px", 
+                  backgroundColor: "#fff3cd", 
+                  borderRadius: "6px", 
+                  marginBottom: "12px",
+                  fontSize: "12px",
+                  color: "#856404"
+                }}>
+                  ⚠️ Using Mock Data - Check console for available booking IDs
+                </div>
+              )}
               
               <div className="booking-request-info">
                 <div className="booking-info-item">
@@ -207,7 +376,7 @@ function BookingTrackingContent() {
                     </svg>
                   </span>
                   <span className="booking-info-label">Vehicle Number:</span>
-                  <span className="booking-info-value">{bookingData.vehicleNumber}</span>
+                  <span className="booking-info-value">{bookingData?.vehicleNumber || mockBookingData.vehicleNumber}</span>
                 </div>
                 
                 <div className="booking-info-item">
@@ -218,7 +387,7 @@ function BookingTrackingContent() {
                     </svg>
                   </span>
                   <span className="booking-info-label">Connector Gun1:</span>
-                  <span className="booking-info-value">{bookingData.connector}</span>
+                  <span className="booking-info-value">{bookingData?.connectorType || mockBookingData.connector}</span>
                 </div>
                 
                 <div className="booking-info-item">
@@ -228,7 +397,7 @@ function BookingTrackingContent() {
                     </svg>
                   </span>
                   <span className="booking-info-label">Charger Type:</span>
-                  <span className="booking-info-value">{bookingData.chargerType}</span>
+                  <span className="booking-info-value">{bookingData?.chargerId?.type || mockBookingData.chargerType}</span>
                 </div>
                 
                 <div className="booking-info-item">
@@ -238,7 +407,7 @@ function BookingTrackingContent() {
                     </svg>
                   </span>
                   <span className="booking-info-label">Total Unit:</span>
-                  <span className="booking-info-value">{bookingData.unitPrice}</span>
+                  <span className="booking-info-value">{bookingData?.unitPrice || mockBookingData.unitPrice}</span>
                 </div>
                 
                 <div className="booking-info-item">
@@ -248,14 +417,24 @@ function BookingTrackingContent() {
                     </svg>
                   </span>
                   <span className="booking-info-label">Amount:</span>
-                  <span className="booking-info-value">{bookingData.amount}</span>
+                  <span className="booking-info-value">₹{bookingData?.amount || mockBookingData.amount.replace('₹', '')}</span>
                 </div>
               </div>
-{/* Separator Line */}
+              {/* Separator Line */}
               <div className="tracking-separator-line"></div>
               {/* OTP Section */}
               <div className="tracking-otp-section">
                 <div className="tracking-otp-label">OTP</div>
+                {!bookingId || bookingId.length !== 24 ? (
+                  <div style={{ padding: "10px", textAlign: "center", fontSize: "12px", color: "#666" }}>
+                    Note: Enter a valid booking ID in URL to verify OTP and update database
+                  </div>
+                ) : null}
+                {loading && otp.join("").length === 6 && (
+                  <div style={{ padding: "10px", textAlign: "center", fontSize: "14px" }}>
+                    Verifying...
+                  </div>
+                )}
                 <div className="tracking-otp-inputs">
                   {otp.map((value, index) => (
                     <input
@@ -267,6 +446,7 @@ function BookingTrackingContent() {
                       onChange={(e) => handleOtpChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       className="tracking-otp-input"
+                      disabled={loading || verificationCompleted}
                       suppressHydrationWarning
                     />
                   ))}
@@ -316,7 +496,10 @@ function BookingTrackingContent() {
                 </div>
                 <h2 className="verification-title">Verification Successfully!</h2>
                 <p className="verification-message">
-                  The OTP is verified the payment link been sent to user
+                  OTP verified! Revenue, sessions, and charger status have been updated in the database.
+                </p>
+                <p style={{ fontSize: "14px", color: "#666", marginTop: "10px" }}>
+                  Redirecting to dashboard...
                 </p>
               </>
             )}

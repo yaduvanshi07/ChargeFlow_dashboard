@@ -164,6 +164,8 @@
 }
 
 /* Responsive Design */
+
+/* Mobile View - Keep Original */
 @media (max-width: 767px) {
   .booking-stats-container {
     flex-direction: column;
@@ -175,6 +177,7 @@
   .booking-stat-card {
     width: 100%;
     max-width: 230px;
+    min-height: 125px;
     margin: 0 auto;
     height: 110px;
     padding: 16px;
@@ -203,13 +206,59 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Tablet/Laptop View - Modified to show all 4 cards in one line */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
   .booking-stats-container {
-    gap: 18px;
-    padding: 0 20px;
+    gap: 10px;
+    padding: 0 16px;
+    flex-wrap: nowrap;
+  }
+  
+  .booking-stat-card {
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+    height: 115px;
+    padding: 14px;
+    flex-shrink: 0;
+  }
+
+  .booking-stat-icon-container {
+    width: 20px;
+    height: 20px;
+  }
+
+  .booking-stat-icon-container svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .booking-stat-title {
+    font-size: 16px;
+  }
+
+  .booking-stat-count {
+    font-size: 28px;
+  }
+
+  .booking-stat-label {
+    font-size: 11px;
+  }
+
+  .booking-stat-view-details {
+    width: 110px;
+    height: 19px;
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+
+  .booking-stat-view-details svg {
+    width: 14px;
+    height: 14px;
   }
 }
 
+/* Desktop View - Keep Original */
 @media (min-width: 1024px) {
   .booking-stats-container {
     margin-left: 35px;

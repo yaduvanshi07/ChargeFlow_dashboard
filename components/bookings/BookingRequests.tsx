@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Wifi, Coffee, Shield, ParkingCircle, Bath } from "lucide-react";
+import { bookingsAPI } from "@/lib/api";
 import "./booking-requests.css";
 
 interface BookingRequest {
-  id: number;
+  id: string;
   stationName: string;
   vehicleModel: string;
   vehicleNumber: string;
@@ -19,63 +20,101 @@ interface BookingRequest {
   timer: number;
 }
 
+// localStorage helpers for accepted bookings
+const ACCEPTED_BOOKINGS_KEY = 'accepted_bookings';
+
+const saveAcceptedBooking = (booking: any) => {
+  try {
+    const existingBookings = JSON.parse(localStorage.getItem(ACCEPTED_BOOKINGS_KEY) || '[]');
+    const updatedBookings = [booking, ...existingBookings];
+    localStorage.setItem(ACCEPTED_BOOKINGS_KEY, JSON.stringify(updatedBookings));
+  } catch (error) {
+    console.error('Error saving accepted booking:', error);
+  }
+};
+
+// Function to clear all accepted bookings from localStorage
+const clearAcceptedBookings = () => {
+  try {
+    localStorage.removeItem(ACCEPTED_BOOKINGS_KEY);
+    console.log('✅ Cleared accepted bookings from localStorage');
+  } catch (error) {
+    console.error('Error clearing accepted bookings:', error);
+  }
+};
+
 export default function BookingRequests() {
-  const [requests, setRequests] = useState<BookingRequest[]>([
-    {
-      id: 1,
-      stationName: "Premium Mall Charging Hub",
-      vehicleModel: "Tata Nexon EV",
-      vehicleNumber: "DLxxxxxx34",
-      vehicleImage: "/ev.avif",
-      connector: "Type2",
-      chargerType: "Premium DC Fast-50kWh",
-      unitPrice: "₹18/KWh",
-      totalUnits: "₹18/KWh",
-      amount: "₹320.00",
-      amenities: ["WiFi", "Parking", "Cafe"],
-      timer: 59,
-    },
-    {
-      id: 2,
-      stationName: "Residential Society Charger",
-      vehicleModel: "MG ZS EV",
-      vehicleNumber: "DLxxxxxx54",
-      vehicleImage: "/evch.jpg",
-      connector: "Type2",
-      chargerType: "Premium AC Fast-50kWh",
-      unitPrice: "₹18/KWh",
-      totalUnits: "₹18/KWh",
-      amount: "₹410.00",
-      amenities: ["Security", "Parking", "Restroom"],
-      timer: 59,
-    },
-    {
-      id: 3,
-      stationName: "Highway Charging Point",
-      vehicleModel: "Tata Nexon EV",
-      vehicleNumber: "DLxxxxxx43",
-      vehicleImage: "/ev.avif",
-      connector: "Type2",
-      chargerType: "Premium DC Fast-50kWh",
-      unitPrice: "₹18/KWh",
-      totalUnits: "₹18/KWh",
-      amount: "₹320.00",
-      amenities: ["WiFi", "Parking", "Cafe"],
-      timer: 59,
-    },
-  ]);
+  const [requests, setRequests] = useState<BookingRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch pending bookings from backend
+  useEffect(() => {
+    const fetchPendingBookings = async () => {
+      try {
+        setLoading(true);
+        const response = await bookingsAPI.getBookings(1, 50, 'PENDING' as any);
+        
+        // Handle nested response structure: {success: true, data: {bookings: [...], pagination: {...}}}
+        const bookings = response?.data?.bookings || response?.bookings || [];
+        
+        // Transform backend data to frontend format
+        const transformedRequests = bookings.map((booking: any) => ({
+          id: booking._id,
+          stationName: booking.chargerName || 'Unknown Station',
+          vehicleModel: booking.vehicleModel || 'Unknown Vehicle',
+          vehicleNumber: booking.vehicleNumber || 'N/A',
+          vehicleImage: "/ev.avif",
+          connector: booking.connectorType || 'Type2',
+          chargerType: 'Premium AC Fast-50kWh',
+          unitPrice: booking.unitPrice || '₹18/KWh',
+          totalUnits: booking.unitPrice || '₹18/KWh',
+          amount: `₹${booking.amount || 0}.00`,
+          amenities: ["WiFi", "Parking", "Security"],
+          timer: 59,
+        }));
+        
+        setRequests(transformedRequests);
+      } catch (error) {
+        console.error('Error fetching pending bookings:', error);
+        // Fallback to mock data if API fails
+        setRequests([
+          {
+            id: "507f1f77bcf86cd799439015",
+            stationName: "Auto Test Station",
+            vehicleModel: "Tata Tigor EV",
+            vehicleNumber: "DLAUTO8888",
+            vehicleImage: "/ev.avif",
+            connector: "Type2",
+            chargerType: "Premium AC Fast-50kWh",
+            unitPrice: "₹18/KWh",
+            totalUnits: "₹18/KWh",
+            amount: "₹180.00",
+            amenities: ["WiFi", "Parking", "Security"],
+            timer: 59,
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPendingBookings();
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchPendingBookings, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setRequests((prev) => {
-        // Only update if there are active timers to avoid unnecessary re-renders
         const hasActiveTimers = prev.some(req => req.timer > 0);
         if (!hasActiveTimers) return prev;
         
         return prev.map((req) => 
           req.timer > 0 
             ? { ...req, timer: req.timer - 1 }
-            : req // Don't create new object if timer is already 0
+            : req
         );
       });
     }, 1000);
@@ -106,11 +145,88 @@ export default function BookingRequests() {
     }
   };
 
-  const handleAccept = (id: number) => {
-    console.log("Accept booking:", id);
+  const handleAccept = async (id: string) => {
+    try {
+      // Check if booking is already being processed
+      const existingRequest = requests.find(req => req.id === id);
+      if (!existingRequest) {
+        console.log("Booking already processed:", id);
+        return;
+      }
+
+      // Call backend API to accept booking
+      await bookingsAPI.acceptBooking(id);
+      
+      // Remove from requests list
+      setRequests((prev) => prev.filter((req) => req.id !== id));
+      
+      // Create booking object for upcoming bookings
+      const acceptedBooking = {
+        id,
+        station: existingRequest.stationName,
+        vehicleModel: existingRequest.vehicleModel,
+        vehicleNumber: existingRequest.vehicleNumber,
+        connector: existingRequest.connector,
+        chargerType: existingRequest.chargerType,
+        amount: existingRequest.amount,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      };
+      
+      // Save to localStorage
+      saveAcceptedBooking(acceptedBooking);
+      
+      // Add to upcoming bookings (trigger event to update UpcomingBookings component)
+      window.dispatchEvent(new CustomEvent('booking-accepted', { 
+        detail: acceptedBooking
+      }));
+      
+      // Dispatch charger status change event (charger goes online when booking is accepted)
+      window.dispatchEvent(new CustomEvent('charger-status-changed', {
+        detail: {
+          bookingId: id,
+          status: 'ONLINE',
+          timestamp: new Date().toISOString(),
+          message: 'Charger status changed to online after booking acceptance'
+        }
+      }));
+      
+      console.log("Booking accepted successfully:", id);
+    } catch (error: any) {
+      console.error("Error accepting booking:", error);
+      
+      // If booking is already accepted, remove it from requests and add to upcoming
+      if (error.message?.includes("Current status: ACCEPTED")) {
+        console.log("Booking was already accepted, updating UI...");
+        const existingRequest = requests.find(req => req.id === id);
+        if (existingRequest) {
+          // Remove from requests list
+          setRequests((prev) => prev.filter((req) => req.id !== id));
+          
+          // Create booking object for upcoming bookings
+          const acceptedBooking = {
+            id,
+            station: existingRequest.stationName,
+            vehicleModel: existingRequest.vehicleModel,
+            vehicleNumber: existingRequest.vehicleNumber,
+            connector: existingRequest.connector,
+            chargerType: existingRequest.chargerType,
+            amount: existingRequest.amount,
+            time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+          };
+          
+          // Save to localStorage
+          saveAcceptedBooking(acceptedBooking);
+          
+          // Add to upcoming bookings
+          window.dispatchEvent(new CustomEvent('booking-accepted', { 
+            detail: acceptedBooking
+          }));
+        }
+      }
+    }
   };
 
-  const handleCancel = (id: number) => {
+  const handleCancel = (id: string) => {
     console.log("Cancel booking:", id);
     setRequests((prev) => prev.filter((req) => req.id !== id));
   };
@@ -118,10 +234,40 @@ export default function BookingRequests() {
   return (
     <div className="booking-requests-container">
       <h2 className="booking-requests-title">Booking Requests</h2>
-      <div className="booking-requests-wrapper">
-        <div className="booking-requests-cards">
+      <div 
+        className="booking-requests-wrapper"
+        style={{
+          overflowX: 'scroll',
+          overflowY: 'hidden',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch'
+        } as React.CSSProperties}
+      >
+        <style jsx>{`
+          .booking-requests-wrapper::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+        <div 
+          className="booking-requests-cards"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            gap: '20px'
+          }}
+        >
           {requests.map((request) => (
-            <div key={request.id} className="booking-request-card">
+            <div 
+              key={request.id} 
+              className="booking-request-card"
+              style={{
+                minWidth: '320px',
+                width: '359px',
+                flexShrink: 0
+              }}
+            >
               <div className="booking-request-image-container">
                 <div className="booking-request-image">
                   <img src={request.vehicleImage} alt={request.vehicleModel} />
