@@ -33,25 +33,28 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Preconnect to external domains for faster loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+        <link key="preconnect-google" rel="preconnect" href="https://fonts.googleapis.com" />
+        <link key="preconnect-gstatic" rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
         {/* Load Material Symbols fonts with display=swap to prevent blocking */}
         <link
+          key="material-symbols-rounded"
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
         <link
+          key="material-symbols-outlined"
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
         <link
+          key="material-symbols-sharp"
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
-        
+
         {/* Load Iconify asynchronously to prevent render blocking */}
-        <script src="https://code.iconify.design/2/2.1.0/iconify.min.js" async></script>
+        <script key="iconify" src="https://code.iconify.design/2/2.1.0/iconify.min.js" async></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
