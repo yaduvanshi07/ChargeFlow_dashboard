@@ -11,6 +11,9 @@ router.get('/active', chargerController.getActiveChargersCount);
 // GET /api/chargers/sessions - Get total sessions across all chargers
 router.get('/sessions', chargerController.getTotalSessions);
 
+// GET /api/chargers/weekly-sessions - Get weekly sessions count
+router.get('/weekly-sessions', chargerController.getWeeklySessions);
+
 // GET /api/chargers - Get all chargers with pagination
 router.get('/', chargerController.getAllChargers);
 

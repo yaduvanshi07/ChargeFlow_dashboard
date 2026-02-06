@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
-const Booking = require('./models/Booking');
-const Charger = require('./models/Charger');
+const Booking = require('../models/Booking');
+const Charger = require('../models/Charger');
+const connectDB = require('../config/database');
 require('dotenv').config();
 
 // Create multiple PENDING bookings for testing
 async function createTestPendingBookings() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chargeflow');
+    await connectDB();
     console.log('Connected to MongoDB');
 
     // Get a charger for reference

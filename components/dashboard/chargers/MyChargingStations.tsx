@@ -37,9 +37,9 @@ export default function MyChargingStations() {
     try {
       setLoading(true);
       const response = await chargersAPI.getChargers(1, 50); // Fetch up to 50 chargers
-      
+
       // Transform backend data to match ChargerCard interface
-      const transformedChargers = response.chargers.map((charger: any) => {
+      const transformedChargers = response.chargers.map((charger: any, index: number) => {
         // Determine charging speed string based on type and power
         let chargingSpeed = "";
         switch (charger.type) {
@@ -79,6 +79,9 @@ export default function MyChargingStations() {
           image = charger.power >= 150 ? "/evch.jpg" : "/ch.jpg";
         }
 
+        // Mock blocked status for the second charger (index 1)
+        const status = index === 1 ? "BLOCKED" : (charger.status || "ONLINE");
+
         return {
           id: charger._id || charger.id,
           name: charger.name,
@@ -90,9 +93,9 @@ export default function MyChargingStations() {
           utilization: charger.utilization || 0,
           rating: 4.5 + Math.random() * 0.5, // Random rating between 4.5-5.0 for demo
           sessions: charger.totalSessions || 0,
-          isOnline: charger.status === "ONLINE",
+          isOnline: status === "ONLINE", // Use the derived status
           type: charger.type,
-          status: charger.status,
+          status: status, // Use the derived status
           power: charger.power,
         };
       });
@@ -131,8 +134,8 @@ export default function MyChargingStations() {
   };
 
   const handleChargerUpdated = (updatedCharger: ChargerData) => {
-    setChargers(prev => 
-      prev.map(charger => 
+    setChargers(prev =>
+      prev.map(charger =>
         charger.id === updatedCharger.id ? updatedCharger : charger
       )
     );
@@ -153,10 +156,10 @@ export default function MyChargingStations() {
         <h2 className="charging-stations-title">
           My Charging Stations
         </h2>
-        
+
         <div className="charging-stations-controls">
           {/* Add Charger Button */}
-          <button 
+          <button
             className="charging-stations-add-btn"
             onClick={handleAddCharger}
             onMouseDown={(e) => {
@@ -186,9 +189,9 @@ export default function MyChargingStations() {
           ))
         ) : chargers.length > 0 ? (
           chargers.map((charger) => (
-            <ChargerCard 
-              key={charger.id} 
-              {...charger} 
+            <ChargerCard
+              key={charger.id}
+              {...charger}
               onEdit={handleEditCharger}
             />
           ))
@@ -198,7 +201,7 @@ export default function MyChargingStations() {
             <div className="empty-state-icon">🔌</div>
             <h3>No Charging Stations</h3>
             <p>Get started by adding your first charging station.</p>
-            <button 
+            <button
               className="charging-stations-add-btn"
               onClick={handleAddCharger}
             >

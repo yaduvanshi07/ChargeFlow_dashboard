@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const Booking = require('./models/Booking');
-const Charger = require('./models/Charger');
+const Booking = require('../models/Booking');
+const Charger = require('../models/Charger');
+const connectDB = require('../config/database');
 require('dotenv').config();
 
 // Sample booking data with MongoDB ObjectId format
@@ -400,8 +401,8 @@ const sampleBookings = [
 
 async function seedBookings() {
   try {
-    // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chargeflow');
+    // Connect to MongoDB using centralized connection
+    await connectDB();
     console.log('Connected to MongoDB');
 
     // Get a charger for reference

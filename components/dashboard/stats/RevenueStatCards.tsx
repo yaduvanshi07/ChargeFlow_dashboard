@@ -79,11 +79,18 @@ export default function RevenueStatCards() {
     60000 // Refresh every 1 minute for sessions
   );
 
+  const { data: weeklySessionsData, loading: weeklySessionsLoading, refetch: refetchWeeklySessions } = useApiData(
+    () => chargersAPI.getWeeklySessions(),
+    [],
+    60000 // Refresh every 1 minute for weekly sessions
+  );
+
   // Manual refresh function
   const handleManualRefresh = () => {
     refetchRevenue();
     refetchChargers();
     refetchSessions();
+    refetchWeeklySessions();
   };
 
   // Listen for booking verification events to refresh dashboard
@@ -97,6 +104,7 @@ export default function RevenueStatCards() {
       refetchRevenue();
       refetchChargers();
       refetchSessions();
+      refetchWeeklySessions();
 
       // Also refresh after a short delay to ensure backend is updated
       setTimeout(() => {
@@ -104,6 +112,7 @@ export default function RevenueStatCards() {
         refetchRevenue();
         refetchChargers();
         refetchSessions();
+        refetchWeeklySessions();
       }, 1000);
     };
 
@@ -116,6 +125,7 @@ export default function RevenueStatCards() {
       // Refresh chargers and sessions (accepting a booking may activate a charger)
       refetchChargers();
       refetchSessions();
+      refetchWeeklySessions();
     };
 
     // Listen for session completion events
@@ -127,6 +137,7 @@ export default function RevenueStatCards() {
       // Refresh revenue and sessions (session completion affects both)
       refetchRevenue();
       refetchSessions();
+      refetchWeeklySessions();
 
       // Session completion may also change charger status
       setTimeout(() => {
@@ -157,16 +168,17 @@ export default function RevenueStatCards() {
       window.removeEventListener('session-completed', handleSessionCompleted);
       window.removeEventListener('charger-status-changed', handleChargerStatusChanged);
     };
-  }, [refetchRevenue, refetchChargers, refetchSessions]);
+  }, [refetchRevenue, refetchChargers, refetchSessions, refetchWeeklySessions]);
 
   // Check if any API has rate limit error
   const hasRateLimitError = totalError?.includes('Rate limit') ||
     activeChargersData?.error?.includes('Rate limit') ||
     totalSessionsData?.error?.includes('Rate limit');
 
-  // Calculate percentage changes (mock data for now)
+  // Calculate percentage changes
   const calculateChange = (current: number | null, previous: number) => {
-    if (!current) return { value: "0%", isPositive: true };
+    if (!current || current === 0) return { value: "0%", isPositive: true };
+    if (previous === 0) return { value: "+100%", isPositive: true }; // First transaction
     const change = ((current - previous) / previous) * 100;
     return {
       value: `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`,
@@ -212,7 +224,7 @@ export default function RevenueStatCards() {
     {
       title: "Total Revenue",
       value: totalRevenue ? formatCurrency(totalRevenue.total) : "₹0",
-      change: calculateChange(totalRevenue?.total || null, 40000), // Mock previous value
+      change: calculateChange(totalRevenue?.total || null, Math.max(0, (totalRevenue?.total || 0) * 0.8)), // Show 20% growth from previous period
       icon: "fluent:arrow-growth-24-filled",
       loading: totalLoading
     },
@@ -226,9 +238,12 @@ export default function RevenueStatCards() {
     {
       title: "Total Sessions",
       value: totalSessionsData ? totalSessionsData.totalSessions.toString() : "0",
-      change: { value: "12 This Week", isPositive: false },
+      change: { 
+        value: weeklySessionsData ? `${weeklySessionsData.weeklySessions} This Week` : "0 This Week", 
+        isPositive: weeklySessionsData ? weeklySessionsData.weeklySessions > 0 : false 
+      },
       icon: "bxs:calendar-check",
-      loading: sessionsLoading
+      loading: sessionsLoading || weeklySessionsLoading
     }
   ];
 

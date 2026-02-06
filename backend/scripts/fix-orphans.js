@@ -2,11 +2,12 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Booking = require('../models/Booking');
 const Charger = require('../models/Charger');
+const connectDB = require('../config/database');
 
 const fixOrphans = async () => {
     try {
         console.log('Connecting to MongoDB...');
-        await mongoose.connect(process.env.MONGODB_URI);
+        await connectDB();
         console.log('Connected.');
 
         // 1. Ensure at least one charger exists

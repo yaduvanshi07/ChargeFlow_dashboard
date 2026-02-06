@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
-const Booking = require('./models/Booking');
+const Booking = require('../models/Booking');
+const connectDB = require('../config/database');
 require('dotenv').config();
 
 // Reset all bookings to PENDING status for testing
 async function resetAllBookingsToPending() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chargeflow');
+    await connectDB();
     console.log('Connected to MongoDB');
 
     // Reset all bookings to PENDING status

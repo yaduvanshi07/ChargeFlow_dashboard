@@ -61,6 +61,40 @@ exports.getTotalSessions = async (req, res) => {
     }
 };
 
+// Get weekly sessions count
+exports.getWeeklySessions = async (req, res) => {
+    try {
+        // Get the start of the current week (Monday)
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        const day = startOfWeek.getDay();
+        const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Sunday
+        startOfWeek.setDate(diff);
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        // Get completed bookings this week (sessions)
+        const Booking = require('../models/Booking');
+        const weeklySessions = await Booking.countDocuments({
+            status: 'COMPLETED',
+            sessionEndedAt: { $exists: true, $gte: startOfWeek }
+        });
+
+        res.status(200).json({
+            success: true,
+            data: {
+                weeklySessions: weeklySessions
+            }
+        });
+    } catch (error) {
+        console.error('Error getting weekly sessions:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
+
 // Get all chargers with pagination
 exports.getAllChargers = async (req, res) => {
     try {
