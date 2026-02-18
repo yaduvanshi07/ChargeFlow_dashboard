@@ -1,6 +1,6 @@
 # ChargeFlow Dashboard
 
-A modern, responsive EV charging management dashboard built with Next.js, TypeScript, and Tailwind CSS. This application provides comprehensive monitoring and management capabilities for EV charging stations, revenue tracking, and customer interactions.
+A modern, responsive EV charging management dashboard built with Next.js, TypeScript, and Tailwind CSS. This application provides comprehensive monitoring and management capabilities for EV charging stations, revenue tracking, and customer interactions with a secure user-bound password verification system.
 
 ## 🚀 Features
 
@@ -12,11 +12,18 @@ A modern, responsive EV charging management dashboard built with Next.js, TypeSc
 
 ### Management Modules
 - **Charger Management**: Monitor and manage EV charging stations
-- **Booking System**: Handle customer bookings and reservations
+- **Booking System**: Handle customer bookings and reservations with user-bound password verification
 - **Revenue Tracking**: Comprehensive financial analytics and reporting
 - **Wallet Management**: Customer wallet and payment processing
 - **User Profiles**: Host and customer profile management
 - **Reviews & Ratings**: Customer feedback and rating system
+
+### Security & Verification
+- **User-Bound Password System**: Secure, reusable password system tied to user ID
+- **Password Generation**: Random 6-8 character passwords generated once per user
+- **Secure Storage**: Passwords stored only as hashed values (bcrypt)
+- **Station Access Control**: Password-based verification for charging station access
+- **No Password Exposure**: Passwords never returned in API responses or exposed to frontend
 
 ### Technical Features
 - **TypeScript**: Full type safety and better development experience
@@ -24,6 +31,7 @@ A modern, responsive EV charging management dashboard built with Next.js, TypeSc
 - **API Integration**: RESTful backend with real-time data synchronization
 - **Error Handling**: Comprehensive error states and user feedback
 - **Performance**: Optimized loading states and data caching
+- **Database**: MongoDB with Mongoose ODM for robust data modeling
 
 ## 🛠️ Tech Stack
 
@@ -40,6 +48,7 @@ A modern, responsive EV charging management dashboard built with Next.js, TypeSc
 - **Express.js**: Web framework
 - **MongoDB**: NoSQL database
 - **Mongoose**: MongoDB object modeling
+- **bcryptjs**: Password hashing and verification
 - **JWT**: Authentication (planned)
 
 ## 📦 Installation
@@ -221,16 +230,24 @@ backend/                                   # Backend API server
 ├── config/                                # Configuration files
 │   └── database.js                        # MongoDB connection configuration
 ├── models/                                # Mongoose data models
+│   ├── Booking.js                         # Booking model with status tracking
+│   ├── BookingManagement.js               # Booking management and user linking
 │   ├── Charger.js                         # Charger model with methods
-│   └── Transaction.js                    # Transaction model with methods
+│   ├── Transaction.js                    # Transaction model with methods
+│   ├── User.js                           # User model for customer accounts
+│   └── UserPassword.js                   # User-bound password system
+├── controllers/                           # API route controllers
+│   └── bookingController.js               # Booking management with password verification
 ├── routes/                                # API route handlers
-│   ├── chargers.js                         # Charger management API routes
-│   └── money.js                           # Money transaction API routes
+│   ├── bookings.js                        # Booking API endpoints
+│   ├── chargers.js                        # Charger management API routes
+│   └── money.js                          # Money transaction API routes
+├── utils/                                 # Utility functions
+│   └── otpUtils.js                       # OTP utilities (legacy)
 ├── .env                                   # Environment variables (gitignored)
 ├── node_modules/                          # Node.js dependencies (gitignored)
 ├── package-lock.json                      # Dependency lock file
 ├── package.json                           # Backend dependencies and scripts
-├── seed-chargers.js                       # Consolidated database seeder
 ├── server.js                              # Express server configuration
 └── README.md                              # Backend API documentation
 ```
@@ -245,7 +262,8 @@ backend/                                   # Backend API server
 ### Booking Management
 - **BookingRequests**: Handle incoming booking requests
 - **BookingStats**: Booking analytics and metrics
-- **Verification**: Booking verification and confirmation
+- **BookingVerification**: User-bound password verification system
+- **UpcomingBookings**: Track accepted and verified bookings
 
 ### Charger Management
 - **ChargerGrid**: Visual charger status display
@@ -366,10 +384,47 @@ npm run build
 Currently using mock authentication. JWT implementation planned.
 
 ### Key Endpoints
+
+#### Money Management
 - `GET /api/money/total` - Total revenue
+- `GET /api/money/total/:source` - Revenue by source
+- `GET /api/money/statistics` - Comprehensive statistics
+- `POST /api/money/add` - Add transaction
+
+#### Charger Management
 - `GET /api/chargers/statistics` - Charger statistics
 - `GET /api/chargers/active` - Active charger count
 - `GET /api/chargers/sessions` - Total sessions
+- `GET /api/chargers` - All chargers with pagination
+- `POST /api/chargers` - Add new charger
+- `PUT /api/chargers/:id` - Update charger
+
+#### Booking Management
+- `GET /api/bookings` - Get all bookings with filters
+- `GET /api/bookings/:id` - Get single booking
+- `POST /api/bookings` - Create new booking
+- `PUT /api/bookings/:id/accept` - Accept booking (generates user password)
+- `POST /api/bookings/:id/pay` - Simulate payment (links user to booking)
+- `POST /api/bookings/:id/verify-otp` - Verify user password for station access
+- `POST /api/bookings/verify-station` - Station verification (admin only)
+- `GET /api/bookings/management` - Get booking management data
+- `PUT /api/bookings/:id/cancel` - Cancel booking
+
+### User-Bound Password System
+The system uses a secure password-based verification instead of OTP:
+
+#### Password Generation Rules
+- **Unique per User**: Each user has exactly one password for their lifetime
+- **Deterministic Generation**: Password is the **last 6 characters** of the User ID
+- **Secure Storage**: Only hashed values stored using bcrypt
+- **Auto-Migration**: Legacy random passwords updated to new format automatically
+- **No Exposure**: Never returned in API responses or logged to frontend
+
+#### Password Flow
+1. **Booking Acceptance**: User account created
+2. **Payment Processing**: User linked to booking
+3. **Station Access**: User enters last 6 digits of their ID to start charging session
+4. **Session Management**: Password verification activates charger and records revenue
 
 ## 🐛 Troubleshooting
 

@@ -1,15 +1,18 @@
 "use client";
 
 import { useMemo } from "react";
-import { bookingManagementData } from "@/lib/mockData";
+import { bookingsAPI, useApiData } from "@/lib/api";
 
 export default function BookingManagement() {
-  // Memoize the tripled data to prevent recalculation on every render
-  const displayData = useMemo(() => 
-    [...bookingManagementData, ...bookingManagementData, ...bookingManagementData],
-    []
-  );
-  
+  // Use the custom hook to fetch data
+  const { data: managementData, loading, error } = useApiData(bookingsAPI.getBookingManagement, [], 5000); // Poll every 5s
+
+  // Memoize the data
+  const displayData = useMemo(() => {
+    if (!managementData) return [];
+    return managementData;
+  }, [managementData]);
+
   return (
     <div className="booking-management-container">
       <div className="booking-management-wrapper">
@@ -27,7 +30,10 @@ export default function BookingManagement() {
               </tr>
             </thead>
             <tbody>
-              {displayData.map((booking, index) => (
+              {loading && !displayData.length && <tr><td colSpan={7} style={{ textAlign: 'center', padding: '20px' }}>Loading...</td></tr>}
+              {error && <tr><td colSpan={7} style={{ textAlign: 'center', color: 'red', padding: '20px' }}>Error: {error}</td></tr>}
+
+              {displayData.map((booking: any, index: number) => (
                 <tr key={`${booking.id}-${index}`}>
                   <td>{booking.customerName}</td>
                   <td>{booking.bookingId}</td>
@@ -40,9 +46,10 @@ export default function BookingManagement() {
                       className="booking-management-status-badge"
                       style={{
                         backgroundColor:
-                          booking.status === "Confirmed"
+                          booking.status === "CONFIRMED" || booking.status === "COMPLETED"
                             ? "#38EF0A"
-                            : "#FFD700",
+                            : booking.status === "UPCOMING" ? "#FFD700" : "#E5E7EB",
+                        color: booking.status === "CONFIRMED" || booking.status === "COMPLETED" ? "#FFF" : "#374151"
                       }}
                     >
                       {booking.status}
@@ -50,6 +57,10 @@ export default function BookingManagement() {
                   </td>
                 </tr>
               ))}
+
+              {!loading && !error && displayData.length === 0 && (
+                <tr><td colSpan={7} style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No active bookings found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

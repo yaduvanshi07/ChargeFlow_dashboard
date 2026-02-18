@@ -14,6 +14,7 @@ interface UpcomingBooking {
   chargerType: string;
   time: string;
   amount: string;
+  status: string; // Added status field
 }
 
 // localStorage helpers
@@ -76,7 +77,7 @@ export default function UpcomingBookings() {
         // Combine both arrays
         const allBookings = [...acceptedBookings, ...verifiedBookings];
 
-        const transformedBookings = allBookings.map((booking: any) => ({
+        const transformedBookings: UpcomingBooking[] = allBookings.map((booking: any) => ({
           id: booking._id,
           station: booking.chargerName || 'Unknown Station',
           vehicleModel: booking.vehicleModel || 'Unknown Vehicle',
@@ -86,6 +87,7 @@ export default function UpcomingBookings() {
           time: booking.acceptedAt ? new Date(booking.acceptedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) :
             booking.verifiedAt ? new Date(booking.verifiedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'N/A',
           amount: `₹${booking.amount || 0}`,
+          status: booking.status
         }));
 
         // Get locally stored bookings
@@ -119,6 +121,7 @@ export default function UpcomingBookings() {
               chargerType: "Premium DC Fast",
               time: "10:00 AM",
               amount: "₹320",
+              status: "ACCEPTED"
             }
           ]);
         }
@@ -158,7 +161,23 @@ export default function UpcomingBookings() {
   }, [upcomingBookings]);
 
   const handleTrack = (booking: UpcomingBooking) => {
+    // Navigate to verification page
     router.push(`/dashboard/bookings/verification?bookingId=${booking.id}`);
+  };
+
+  const handleComplete = async (booking: UpcomingBooking) => {
+    if (confirm('Are you sure you want to end this charging session?')) {
+      try {
+        await bookingsAPI.completeSession(booking.id);
+        // Remove from list or update local state manually to reflect completion immediately
+        setUpcomingBookings(prev => prev.filter(b => b.id !== booking.id));
+        // Trigger refresh
+        window.location.reload();
+      } catch (error) {
+        console.error('Error completing session:', error);
+        alert('Failed to complete session');
+      }
+    }
   };
 
   return (

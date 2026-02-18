@@ -107,12 +107,64 @@ exports.acceptBooking = async (req, res) => {
             });
         }
 
-        // Update booking status to ACCEPTED (for OTP flow)
+        // Update booking status to ACCEPTED
         booking.status = 'ACCEPTED';
         booking.acceptedAt = new Date();
         await booking.save();
 
         await booking.populate('chargerId', 'name location type power status');
+
+        // Create or fetch user for this booking (no password generation at this stage)
+        const User = require('../models/User');
+        let user = await User.findOne({ email: booking.customerEmail });
+
+        if (!user) {
+            user = new User({
+                email: booking.customerEmail,
+                name: booking.customerName
+            });
+            await user.save();
+            console.log(`👤 Created new user: ${booking.customerEmail}`);
+        } else {
+            console.log(`👤 Found existing user: ${booking.customerEmail}`);
+        }
+
+        const BookingManagement = require('../models/BookingManagement');
+
+        // Ensure a single lifecycle record per booking (idempotent on bookingId)
+        let bookingManagement = await BookingManagement.findOne({ bookingId: booking._id });
+
+        if (!bookingManagement) {
+            bookingManagement = new BookingManagement({
+                bookingId: booking._id,
+                userId: user._id,
+                chargerId: booking.chargerId?._id || booking.chargerId,
+                hostId: null, // Reserved for future host ownership model
+                stationName: booking.chargerId?.name || 'Unknown Station',
+                chargerName: booking.chargerName,
+                amount: booking.amount,
+                scheduledTime: booking.scheduledDateTime,
+                status: 'UPCOMING',
+                paymentStatus: 'PENDING'
+            });
+        } else {
+            // If a record already exists (legacy or partial), update linkage/user safely
+            bookingManagement.userId = user._id;
+            bookingManagement.chargerId = booking.chargerId?._id || booking.chargerId;
+            if (!bookingManagement.scheduledTime) {
+                bookingManagement.scheduledTime = booking.scheduledDateTime;
+            }
+        }
+
+        await bookingManagement.save();
+
+        console.log(`🔗 Linked booking ${booking.bookingId} to user ${user._id} in BookingManagement`);
+
+        console.log('\n' + '='.repeat(60));
+        console.log('✅ BOOKING ACCEPTED');
+        console.log('='.repeat(60));
+        console.log(`To Customer: Your booking has been accepted. Please complete payment.`);
+        console.log('='.repeat(60) + '\n');
 
         res.status(200).json({
             success: true,
@@ -129,204 +181,123 @@ exports.acceptBooking = async (req, res) => {
     }
 };
 
-// Development-only: Auto-generate OTP when track page is opened
-exports.autoGenerateOTP = async (req, res) => {
+// Simulate Payment & Password Generation
+exports.simulatePayment = async (req, res) => {
     try {
-        // Skip this endpoint in production
-        if (process.env.NODE_ENV === 'production') {
-            return res.status(404).json({
-                success: false,
-                message: 'Endpoint not available in production'
-            });
-        }
-
-        // Validate ObjectId format
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid booking ID format'
-            });
+            return res.status(400).json({ success: false, message: 'Invalid booking ID format' });
         }
 
         const booking = await Booking.findById(req.params.id);
+        const BookingManagement = require('../models/BookingManagement');
+        const bookingMgmt = await BookingManagement.findOne({ bookingId: req.params.id });
 
         if (!booking) {
-            return res.status(404).json({
-                success: false,
-                message: 'Booking not found'
-            });
+            return res.status(404).json({ success: false, message: 'Booking not found' });
         }
 
-        // Only auto-generate for ACCEPTED bookings
-        if (booking.status !== 'ACCEPTED') {
-            return res.status(400).json({
-                success: false,
-                message: `Auto OTP generation only available for ACCEPTED bookings. Current status: ${booking.status}`
-            });
+        if (!bookingMgmt) {
+            return res.status(404).json({ success: false, message: 'Booking Management record not found. Was booking accepted?' });
         }
 
-        // Check if OTP already exists and is valid
-        if (booking.otp && !booking.otp.isUsed && booking.otp.expiresAt > new Date()) {
-            console.log(`\n🔄 OTP ALREADY EXISTS for booking ${booking.bookingId}: ${booking.otp.code}\n`);
-            return res.status(200).json({
-                success: true,
-                message: 'OTP already exists and is valid',
-                data: {
-                    bookingId: booking.bookingId,
-                    otp: booking.otp.code,
-                    expiresAt: booking.otp.expiresAt,
-                    alreadyExisted: true
-                }
-            });
+        if (bookingMgmt.paymentStatus === 'PAID') {
+            return res.status(400).json({ success: false, message: 'Payment already completed' });
         }
 
-        // Check if charger is still available
-        const charger = await Charger.findById(booking.chargerId);
-        if (!charger) {
-            return res.status(404).json({
-                success: false,
-                message: 'Charger not found'
-            });
-        }
+        // 1. Handle User & Password using user-bound password system
+        const User = require('../models/User');
+        const UserPassword = require('../models/UserPassword');
+        let user = await User.findOne({ email: booking.customerEmail });
+        let plainPassword;
+        let isNewUser = false;
+        let passwordRecord = null;
 
-        if (charger.status === 'OFFLINE' || charger.status === 'MAINTENANCE') {
-            return res.status(400).json({
-                success: false,
-                message: `Charger is ${charger.status}. Cannot generate OTP.`
-            });
-        }
-
-        // Generate new OTP
-        const otpCode = generateOTP();
-        const expiresAt = getOtpExpiry();
-
-        // Save OTP to booking
-        booking.otp = {
-            code: otpCode,
-            expiresAt: expiresAt,
-            isUsed: false
-        };
-
-        await booking.save();
-
-        // Development-only simple log
-        console.log(`\n🧪 TEST OTP for booking ${booking.bookingId}: ${otpCode}\n`);
-
-        res.status(200).json({
-            success: true,
-            message: 'OTP auto-generated successfully',
-            data: {
-                bookingId: booking.bookingId,
-                otp: otpCode,
-                expiresAt: expiresAt,
-                alreadyExisted: false
+        if (user) {
+            // Existing user - get or create password record
+            const existingPasswordRecord = await UserPassword.findOne({ userId: user._id });
+            if (existingPasswordRecord) {
+                passwordRecord = existingPasswordRecord;
+                console.log('🔑 Using existing user password (created in a previous payment flow)');
+            } else {
+                const passwordResult = await UserPassword.getOrCreateUserPassword(user._id);
+                plainPassword = passwordResult.plainPassword;
+                passwordRecord = passwordResult.userPassword;
+                console.log('🔑 Generated password for existing user during payment flow');
             }
-        });
-    } catch (error) {
-        console.error('Error auto-generating OTP:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-            error: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
-    }
-};
-
-// Generate OTP when user reaches station
-exports.generateOTP = async (req, res) => {
-    try {
-        // Validate ObjectId format
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid booking ID format'
+        } else {
+            // New user - create user and password
+            isNewUser = true;
+            user = new User({
+                email: booking.customerEmail,
+                name: booking.customerName
             });
+            await user.save();
+
+            const passwordResult = await UserPassword.getOrCreateUserPassword(user._id);
+            plainPassword = passwordResult.plainPassword;
+            passwordRecord = passwordResult.userPassword;
         }
 
-        const booking = await Booking.findById(req.params.id);
-
-        if (!booking) {
-            return res.status(404).json({
-                success: false,
-                message: 'Booking not found'
-            });
+        // 2. Update BookingManagement lifecycle state
+        bookingMgmt.paymentStatus = 'PAID';
+        bookingMgmt.status = 'CONFIRMED';
+        bookingMgmt.userId = user._id; // Ensure user is linked
+        if (passwordRecord && !bookingMgmt.passwordId) {
+            bookingMgmt.passwordId = passwordRecord._id;
         }
+        await bookingMgmt.save();
 
-        // Check if booking is in ACCEPTED status
-        if (booking.status !== 'ACCEPTED') {
-            return res.status(400).json({
-                success: false,
-                message: `OTP can only be generated for ACCEPTED bookings. Current status: ${booking.status}`
-            });
-        }
-
-        // Check if charger is still available
-        const charger = await Charger.findById(booking.chargerId);
-        if (!charger) {
-            return res.status(404).json({
-                success: false,
-                message: 'Charger not found'
-            });
-        }
-
-        if (charger.status === 'OFFLINE' || charger.status === 'MAINTENANCE') {
-            return res.status(400).json({
-                success: false,
-                message: `Charger is ${charger.status}. Cannot generate OTP.`
-            });
-        }
-
-        // Generate new OTP
-        const otpCode = generateOTP();
-        const expiresAt = getOtpExpiry();
-
-        // Save OTP to booking
-        booking.otp = {
-            code: otpCode,
-            expiresAt: expiresAt,
-            isUsed: false
-        };
-
-        await booking.save();
-
-        // Print OTP to terminal for testing
+        // Log to terminal (backend only, never to API)
         console.log('\n' + '='.repeat(60));
-        console.log('🔔 OTP GENERATED FOR TESTING');
+        console.log('💰 PAYMENT RECEIVED - SIMULATION');
         console.log('='.repeat(60));
         console.log(`📱 Booking ID: ${booking.bookingId}`);
-        console.log(`🔢 OTP Code: ${otpCode}`);
-        console.log(`⏰ Expires At: ${expiresAt.toLocaleString()}`);
-        console.log(`⏳ Valid For: 15 minutes`);
-        console.log('='.repeat(60));
-        console.log('👤 Customer: ' + booking.customerName);
-        console.log('📧 Email: ' + booking.customerEmail);
-        console.log('🚗 Vehicle: ' + booking.vehicleModel + ' (' + booking.vehicleNumber + ')');
+        console.log(`🆔 Booking _id: ${booking._id}`);
+        console.log(`Amount Paid: ₹${booking.amount}`);
+        console.log(`User: ${user.name} (${user.email})`);
+        console.log(`User ID: ${user._id}`);
+        console.log(`Status: ${isNewUser ? 'New User Created' : 'Existing User Found'}`);
+        if (plainPassword) {
+            console.log('-'.repeat(60));
+            console.log(`🔑 USER PASSWORD: ${plainPassword}`);
+            console.log(`📝 Password Type: ${isNewUser ? 'NEW' : 'EXISTING (Created Now)'}`);
+            console.log(`Summary -> userId: ${user._id}, bookingId: ${booking._id}, amount: ₹${booking.amount}, password: ${plainPassword}`);
+            console.log(`(Send this password to the user via SMS/Email)`);
+        } else {
+            console.log('-'.repeat(60));
+            console.log('🔑 USER PASSWORD: (REUSED - NOT LOGGED FOR SECURITY)');
+            console.log('📝 Password Type: EXISTING');
+        }
         console.log('='.repeat(60) + '\n');
-
-        // In production, send OTP via SMS/Email
-        // For now, we'll return it in response (mock)
 
         res.status(200).json({
             success: true,
-            message: 'OTP generated successfully',
+            message: 'Payment confirmed and user password processed',
             data: {
-                bookingId: booking.bookingId,
-                otp: otpCode, // In production, don't return OTP in response
-                expiresAt: expiresAt,
-                expiresInMinutes: 15
+                paymentStatus: 'PAID',
+                userId: user._id,
+                isNewUser: isNewUser
+                // Note: plainPassword is NOT returned in API response as per requirements
             }
         });
+
     } catch (error) {
-        console.error('Error generating OTP:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-            error: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
+        console.error('Error simulating payment:', error);
+        res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
     }
 };
 
-// Verify OTP and trigger all updates
+// Development-only: Auto-generate OTP -> DEPRECATED/UNUSED in new flow, but kept stubbed
+exports.autoGenerateOTP = async (req, res) => {
+    res.status(200).json({ message: 'Use /pay endpoint to generate User Password instead.' });
+};
+
+// Generate OTP when user reaches station -> REDUNDANT now as password is per user
+exports.generateOTP = async (req, res) => {
+    res.status(200).json({ message: 'User already has a password. Use that.' });
+};
+
+// Verify User Password at Station (replaces OTP verification)
 exports.verifyOTP = async (req, res) => {
     const session = await Booking.db.startSession();
     session.startTransaction();
@@ -341,17 +312,18 @@ exports.verifyOTP = async (req, res) => {
             });
         }
 
+        // The frontend sends { otp: "xxxxxx" } - keeping field name for compatibility
         const { otp } = req.body;
 
         if (!otp) {
             await session.abortTransaction();
             return res.status(400).json({
                 success: false,
-                message: 'OTP is required'
+                message: 'Password is required'
             });
         }
 
-        // Find booking with lock to prevent race conditions
+        // Find booking
         const booking = await Booking.findById(req.params.id).session(session);
 
         if (!booking) {
@@ -362,70 +334,55 @@ exports.verifyOTP = async (req, res) => {
             });
         }
 
-        // Check if booking is already verified/completed
-        if (booking.status === 'VERIFIED' || booking.status === 'COMPLETED') {
-            await session.abortTransaction();
-            return res.status(400).json({
-                success: false,
-                message: 'Booking is already verified/completed'
-            });
-        }
+        // Find User associated with this booking (by email)
+        const User = require('../models/User');
+        const UserPassword = require('../models/UserPassword');
+        const user = await User.findOne({ email: booking.customerEmail }).session(session);
 
-        // Check if booking is cancelled
-        if (booking.status === 'CANCELLED') {
-            await session.abortTransaction();
-            return res.status(400).json({
-                success: false,
-                message: 'Cannot verify OTP for cancelled booking'
-            });
-        }
-
-        // Verify OTP
-        const otpVerification = booking.verifyOtp(otp);
-        if (!otpVerification.valid) {
-            // Print OTP failure to terminal
-            console.log('\n' + '='.repeat(60));
-            console.log('❌ OTP VERIFICATION FAILED');
-            console.log('='.repeat(60));
-            console.log(`📱 Booking ID: ${booking.bookingId}`);
-            console.log(`🔢 Wrong OTP: ${otp}`); // Fixed variable reference from otpCode to otp
-            console.log(`👤 Customer: ${booking.customerName}`);
-            console.log(`🚗 Vehicle: ${booking.vehicleModel} (${booking.vehicleNumber})`);
-            console.log(`💬 Reason: ${otpVerification.message}`);
-            console.log('='.repeat(60) + '\n');
-
-            await session.abortTransaction();
-            return res.status(400).json({
-                success: false,
-                message: otpVerification.message
-            });
-        }
-
-        // Check if charger is still available
-        const charger = await Charger.findById(booking.chargerId).session(session);
-        if (!charger) {
+        if (!user) {
             await session.abortTransaction();
             return res.status(404).json({
                 success: false,
-                message: 'Charger not found'
+                message: 'User identity not found. Has payment been completed?'
             });
         }
 
-        if (charger.status === 'OFFLINE' || charger.status === 'MAINTENANCE') {
+        // Verify user password using the user-bound password system
+        const verificationResult = await UserPassword.verifyUserPassword(user._id, otp);
+
+        if (!verificationResult.valid) {
             await session.abortTransaction();
             return res.status(400).json({
                 success: false,
-                message: `Charger is ${charger.status}. Cannot start session.`
+                message: verificationResult.message
             });
         }
 
-        // ✅ ALL UPDATES HAPPEN HERE (ONLY AFTER OTP VERIFICATION)
+        // SUCCESS FLOW
+
+        // Check if charger is available
+        const charger = await Charger.findById(booking.chargerId).session(session);
+        if (!charger) {
+            await session.abortTransaction();
+            return res.status(404).json({ message: 'Charger not found' });
+        }
 
         // 1. Update booking status to VERIFIED
         booking.status = 'VERIFIED';
         booking.sessionStartedAt = new Date();
         booking.isSessionActive = true;
+        // Clear old OTP fields if any to avoid confusion
+        booking.otp = undefined;
+
         await booking.save({ session });
+
+        // Update BookingManagement status
+        // User requested to keep status as CONFIRMED until session is over.
+        // const BookingManagement = require('../models/BookingManagement');
+        // await BookingManagement.findOneAndUpdate(
+        //     { bookingId: booking._id },
+        //     { status: 'COMPLETED' }
+        // ).session(session);
 
         // 2. Create transaction (revenue)
         const transaction = new Transaction({
@@ -437,53 +394,49 @@ exports.verifyOTP = async (req, res) => {
 
         // Link transaction to booking
         booking.transactionId = transaction._id;
+        // booking.paid = true; // (Field doesn't exist in Booking schema, so skipping, transaction implies paid)
         await booking.save({ session });
 
-        // 3. Update charger: increment sessions, mark as ONLINE/ACTIVE
+        // 3. Update charger
         charger.totalSessions += 1;
         if (charger.status !== 'ONLINE') {
             charger.status = 'ONLINE';
         }
-        // Update utilization (simple calculation: sessions / some base)
-        charger.utilization = Math.min(100, charger.utilization + 5); // Increase by 5% per session
+        charger.utilization = Math.min(100, charger.utilization + 5);
         await charger.save({ session });
 
-        // Commit transaction
         await session.commitTransaction();
 
         // Print verification success to terminal
         console.log('\n' + '='.repeat(60));
-        console.log('✅ OTP VERIFICATION SUCCESSFUL');
+        console.log('✅ STATION ACCESS GRANTED');
         console.log('='.repeat(60));
         console.log(`📱 Booking ID: ${booking.bookingId}`);
-        console.log(`🔢 OTP Verified: ${otp}`);
-        console.log(`💰 Amount: ₹${booking.amount}`);
-        console.log(`🚗 Vehicle: ${booking.vehicleModel} (${booking.vehicleNumber})`);
-        console.log(`⚡ Charger: ${booking.chargerName}`);
-        console.log(`💳 Transaction ID: ${transaction._id}`);
-        console.log(`📊 Revenue Added: ₹${transaction.amount}`);
-        console.log(`🔌 Charger Sessions Updated: ${charger.totalSessions}`);
+        console.log(`👤 User: ${user.name}`);
+        console.log(`🔑 Password Verified`);
+        console.log(`⚡ Charger: ${booking.chargerName} ACTIVATED`);
+        console.log(`💰 Revenue Recorded: ₹${transaction.amount}`);
         console.log('='.repeat(60) + '\n');
 
-        // Populate for response (outside transaction)
+        // Populate for response
         await booking.populate('chargerId', 'name location type power status');
         await booking.populate('transactionId');
 
         res.status(200).json({
             success: true,
-            message: 'OTP verified successfully. Session started and revenue recorded.',
+            message: 'Password verified. Charging session started.',
             data: {
                 booking: booking,
                 transaction: transaction,
                 charger: charger
             }
         });
+
     } catch (error) {
-        // Only abort if transaction is still active
         if (session.inTransaction()) {
             await session.abortTransaction();
         }
-        console.error('Error verifying OTP:', error);
+        console.error('Error verifying Station Password:', error);
         res.status(500).json({
             success: false,
             message: 'Internal server error',
@@ -491,6 +444,84 @@ exports.verifyOTP = async (req, res) => {
         });
     } finally {
         session.endSession();
+    }
+};
+
+// Verify User Password at Station (Admin Only, Existing UI)
+exports.verifyStation = async (req, res) => {
+    try {
+        const { userId, password } = req.body;
+
+        if (!userId || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'userId and password are required'
+            });
+        }
+
+        // Validate ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid user ID format'
+            });
+        }
+
+        // Find user password record
+        const UserPassword = require('../models/UserPassword');
+        const userPasswordRecord = await UserPassword.findOne({ userId });
+
+        if (!userPasswordRecord) {
+            console.log('\n' + '='.repeat(60));
+            console.log('❌ STATION VERIFICATION FAILED');
+            console.log('='.repeat(60));
+            console.log(`User ID: ${userId}`);
+            console.log('Reason: User password record not found');
+            console.log('='.repeat(60) + '\n');
+
+            return res.status(404).json({
+                success: false,
+                message: 'User password not found'
+            });
+        }
+
+        // Verify password against hash
+        const isPasswordValid = await userPasswordRecord.verifyPassword(password);
+
+        if (!isPasswordValid) {
+            console.log('\n' + '='.repeat(60));
+            console.log('❌ STATION VERIFICATION FAILED');
+            console.log('='.repeat(60));
+            console.log(`User ID: ${userId}`);
+            console.log('Reason: Invalid password');
+            console.log('='.repeat(60) + '\n');
+
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid password'
+            });
+        }
+
+        // Success - Log verification success
+        console.log('\n' + '='.repeat(60));
+        console.log('✅ STATION VERIFICATION SUCCESS');
+        console.log('='.repeat(60));
+        console.log(`User ID: ${userId}`);
+        console.log('Password verified successfully');
+        console.log('='.repeat(60) + '\n');
+
+        res.status(200).json({
+            success: true,
+            message: 'Station verification successful'
+        });
+
+    } catch (error) {
+        console.error('Error verifying station:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 
@@ -563,9 +594,19 @@ exports.getBookingById = async (req, res) => {
             });
         }
 
+        // Try to get userId from BookingManagement
+        const BookingManagement = require('../models/BookingManagement');
+        const bookingManagement = await BookingManagement.findOne({ bookingId: booking._id });
+
+        // Add userId to booking response if available
+        const bookingResponse = booking.toObject();
+        if (bookingManagement && bookingManagement.userId) {
+            bookingResponse.userId = bookingManagement.userId;
+        }
+
         res.status(200).json({
             success: true,
-            data: booking
+            data: bookingResponse
         });
     } catch (error) {
         console.error('Error getting booking:', error);
@@ -630,5 +671,108 @@ exports.cancelBooking = async (req, res) => {
             message: 'Internal server error',
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
+    }
+};
+
+// Get Booking Management Data
+exports.getBookingManagement = async (req, res) => {
+    try {
+        const BookingManagement = require('../models/BookingManagement');
+        // Fetch all management records
+        const records = await BookingManagement.find()
+            .sort({ updatedAt: -1 });
+
+        // Format for frontend
+        const formattedData = await Promise.all(records.map(async (record) => {
+            const booking = await Booking.findById(record.bookingId);
+
+            return {
+                id: record._id,
+                bookingId: booking ? booking.bookingId : 'N/A',
+                customerName: booking ? booking.customerName : 'Unknown',
+                charger: record.chargerName,
+                dateTime: new Date(record.createdAt).toLocaleString(),
+                duration: booking ? `${booking.duration} mins` : 'N/A',
+                amount: record.amount,
+                status: record.status
+            };
+        }));
+
+        res.status(200).json({
+            success: true,
+            data: formattedData
+        });
+    } catch (error) {
+        console.error('Error getting booking management data:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
+
+// Complete a session (manually or automatically called)
+exports.completeSession = async (req, res) => {
+    const session = await Booking.db.startSession();
+    session.startTransaction();
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            await session.abortTransaction();
+            return res.status(400).json({ success: false, message: 'Invalid booking ID format' });
+        }
+
+        const booking = await Booking.findById(req.params.id).session(session);
+        if (!booking) {
+            await session.abortTransaction();
+            return res.status(404).json({ success: false, message: 'Booking not found' });
+        }
+
+        if (booking.status !== 'VERIFIED') {
+            await session.abortTransaction();
+            return res.status(400).json({ success: false, message: 'Session must be verified/active to complete. Current status: ' + booking.status });
+        }
+
+        // 1. Update booking status
+        booking.status = 'COMPLETED';
+        booking.sessionEndedAt = new Date();
+        booking.isSessionActive = false;
+        await booking.save({ session });
+
+        // 2. Update BookingManagement status
+        const BookingManagement = require('../models/BookingManagement');
+        await BookingManagement.findOneAndUpdate(
+            { bookingId: booking._id },
+            { status: 'COMPLETED' }
+        ).session(session);
+
+        await session.commitTransaction();
+
+        console.log('\n' + '='.repeat(60));
+        console.log('✅ SESSION COMPLETED');
+        console.log('='.repeat(60));
+        console.log(`📱 Booking ID: ${booking.bookingId}`);
+        console.log(`Duration: ${booking.duration} hours`);
+        console.log('='.repeat(60) + '\n');
+
+        res.status(200).json({
+            success: true,
+            message: 'Session completed successfully',
+            data: booking
+        });
+
+    } catch (error) {
+        if (session.inTransaction()) {
+            await session.abortTransaction();
+        }
+        console.error('Error completing session:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    } finally {
+        session.endSession();
     }
 };

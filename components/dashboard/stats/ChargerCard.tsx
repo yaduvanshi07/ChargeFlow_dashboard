@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { MapPin, Zap, Plug, IndianRupee, Star, ChevronDown, Download, Camera } from "lucide-react";
+import { MapPin, Zap, Plug, IndianRupee, Star, ChevronDown, Download } from "lucide-react";
 import "./stats.css";
 
 interface ChargerCardProps {
@@ -399,9 +399,8 @@ export default function ChargerCard({
               <div className="blocked-modal-title-wrapper">
                 <div className="blocked-modal-icon-wrapper">
                   <img
-                    src="https://api.iconify.design/ph:warning-fill.svg?color=%23FA2023"
+                    src="/warning-icon.png"
                     alt="Warning"
-                    style={{ width: "28px", height: "28px" }}
                   />
                 </div>
                 <div>
@@ -421,9 +420,8 @@ export default function ChargerCard({
             <div className="blocked-modal-content">
               {/* Reason for blocking */}
               <div className="blocked-modal-section">
-                <h3 className="blocked-modal-section-title">Reason for Blocking:</h3>
                 <div className="blocked-modal-reason">
-                  Your charger has been blocked due to repeated customer complaints regarding damaged connectors and safety concerns. this violates our platform's quality standards.
+                  <span style={{ fontWeight: 500, fontSize: '20px', color: '#000000' }}>Reason for Blocking: </span>Your charger has been blocked due to repeated customer complaints regarding damaged connectors and safety concerns. this violates our platform's quality standards.
                 </div>
               </div>
 
@@ -439,7 +437,7 @@ export default function ChargerCard({
 
               {/* Download Report Button */}
               <button className="blocked-modal-download-btn">
-                <Download size={20} />
+                <Download size={16} />
                 Download Report (PDF)
               </button>
 
@@ -468,13 +466,21 @@ export default function ChargerCard({
                 <div className="blocked-modal-uploads">
                   <div className="blocked-modal-upload">
                     <div className="blocked-modal-upload-box">
-                      <Camera className="blocked-modal-upload-icon" />
+                      <img
+                        src="https://api.iconify.design/f7:camera-fill.svg?color=%238E8E93"
+                        alt="Camera"
+                        className="blocked-modal-upload-icon"
+                      />
                       <span className="blocked-modal-upload-text">Before Photo / Video (Damage)</span>
                     </div>
                   </div>
                   <div className="blocked-modal-upload">
                     <div className="blocked-modal-upload-box">
-                      <Camera className="blocked-modal-upload-icon" />
+                      <img
+                        src="https://api.iconify.design/f7:camera-fill.svg?color=%2338EF0A"
+                        alt="Camera"
+                        className="blocked-modal-upload-icon"
+                      />
                       <span className="blocked-modal-upload-text">After Photo / Video (Fix)</span>
                     </div>
                   </div>

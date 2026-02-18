@@ -28,12 +28,12 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logging middleware
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-} else {
-    app.use(morgan('combined'));
-}
+// Logging middleware - DISABLED to reduce terminal noise
+// if (process.env.NODE_ENV === 'development') {
+//     app.use(morgan('dev'));
+// } else {
+//     app.use(morgan('combined'));
+// }
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -49,6 +49,8 @@ app.get('/health', (req, res) => {
 app.use('/api/money', require('./routes/money'));
 app.use('/api/chargers', require('./routes/chargers'));
 app.use('/api/bookings', require('./routes/bookings'));
+app.use('/api/user-passwords', require('./routes/userPasswords'));
+app.use('/api/users', require('./routes/users'));
 
 // 404 handler
 app.use('*', (req, res) => {

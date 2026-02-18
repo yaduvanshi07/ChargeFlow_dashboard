@@ -108,24 +108,6 @@ export default function Navbar() {
               Our Services
             </Link>
             <Link
-              href="/ev-owners"
-              className="text-base lg:text-lg text-black hover:text-gray-700 transition-colors"
-            >
-              For EV Owners
-            </Link>
-            <Link
-              href="/hosts"
-              className="text-base lg:text-lg text-black hover:text-gray-700 transition-colors"
-            >
-              For Hosts
-            </Link>
-            <Link
-              href="/support"
-              className="text-base lg:text-lg text-black hover:text-gray-700 transition-colors"
-            >
-              Support
-            </Link>
-            <Link
               href="/contact"
               className="text-base lg:text-lg text-black hover:text-gray-700 transition-colors"
             >

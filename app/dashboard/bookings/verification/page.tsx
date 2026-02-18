@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useEffect, useRef } from "react";
+import React, { useState, Suspense, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
@@ -41,16 +41,11 @@ function BookingTrackingContent() {
           console.log('Booking data fetched:', data);
           setBookingData(data);
 
-          // Auto-generate OTP for ACCEPTED bookings (development only)
+          // User-bound password system: Password is generated during acceptance, not here
           if (data.status === 'ACCEPTED') {
-            try {
-              console.log('Auto-generating OTP for ACCEPTED booking...');
-              const otpResult = await bookingsAPI.autoGenerateOTP(bookingId);
-              console.log('OTP auto-generation result:', otpResult);
-            } catch (otpError) {
-              console.error('Auto OTP generation failed:', otpError);
-              // Don't fail the page load if OTP generation fails
-            }
+            console.log('✅ Booking accepted - user password should already exist');
+            console.log('💡 Password was generated during booking acceptance');
+            console.log('🔒 Check terminal logs from acceptance for the password');
           }
         } catch (error) {
           console.error('Error fetching booking data:', error);
@@ -105,40 +100,50 @@ function BookingTrackingContent() {
     }
   };
 
-  // Verify OTP when all 6 digits are entered
+  // Verify PASSWORD (6-8 digits per ChargeFlow spec) when digits are entered
   useEffect(() => {
-    const otpString = otp.join("");
-    
-    // Skip if verification is already completed, loading, OTP is not 6 digits, or verification is in progress
-    if (verificationCompleted || loading || otpString.length !== 6 || verificationInProgress.current) {
+    const passwordString = otp.join("");
+
+    // ChargeFlow spec: password is 6-8 digits
+    // Skip if not in valid range
+    if (passwordString.length < 6) {
+      return;
+    }
+
+    // Skip if verification is already completed, loading, or in progress
+    if (verificationCompleted || loading || verificationInProgress.current) {
       if (verificationInProgress.current) {
         console.log('Skipping verification - already in progress');
       }
       return;
     }
-    
-    const verifyOTP = async () => {
-      console.log('Starting OTP verification for:', bookingId);
+
+    const verifyPassword = async () => {
+      console.log('Starting PASSWORD verification for:', bookingId);
       verificationInProgress.current = true; // Mark as in progress
-      
+
       try {
         setLoading(true);
-        
+
         // If bookingId is provided and valid, verify via backend API
         if (bookingId && bookingId.length === 24) {
           try {
-            console.log('📡 Calling verifyOTP API...');
-            await bookingsAPI.verifyOTP(bookingId, otpString);
-            console.log('✅ OTP verification successful!');
-            
-            // Success - OTP verified, database updated
+            console.log('📡 Calling verifyOTP API (password verification)...');
+            await bookingsAPI.verifyOTP(bookingId, passwordString);
+            console.log('✅ Password verification successful!');
+
+            // Success - Password verified, database updated
             setVerificationStatus("success");
             setShowModal(true);
             setVerificationCompleted(true); // Mark as completed
-            
+
             // Dispatch events for dashboard updates
             window.dispatchEvent(new Event('booking-verified'));
-            
+
+            // NOTE: Automatic session completion removed per user request.
+            // Session should be completed when it's actually over.
+
+            /* 
             // Dispatch session completion event
             window.dispatchEvent(new CustomEvent('session-completed', {
               detail: {
@@ -157,10 +162,11 @@ function BookingTrackingContent() {
                 message: 'Charger status changed to offline after session completion'
               }
             }));
-            
+            */
+
           } catch (err: any) {
-            console.log('OTP verification failed:', err.message);
-            // Failed - wrong OTP or error
+            console.log('Password verification failed:', err.message);
+            // Failed - wrong password or error
             setVerificationStatus("failed");
             setShowModal(true);
             // Don't set verificationCompleted on failure to allow retries
@@ -182,7 +188,7 @@ function BookingTrackingContent() {
     };
 
     // Add delay for better UX
-    const timeoutId = setTimeout(verifyOTP, 500);
+    const timeoutId = setTimeout(verifyPassword, 500);
     return () => {
       console.log('Cleaning up verification timeout');
       clearTimeout(timeoutId);
@@ -206,18 +212,18 @@ function BookingTrackingContent() {
   const handleCloseSuccessModal = () => {
     setShowModal(false);
     setVerificationStatus(null);
-    
+
     // Dispatch event to refresh dashboard stats
     console.log('🚀 Dispatching booking-verified event...');
     window.dispatchEvent(new CustomEvent('booking-verified', {
       detail: {
         bookingId,
         timestamp: new Date().toISOString(),
-        message: 'OTP verification completed - refresh dashboard stats'
+        message: 'Password verification completed - refresh dashboard stats'
       }
     }));
     console.log('✅ Event dispatched successfully');
-    
+
     // Auto-redirect to dashboard after successful verification
     console.log('🔄 Auto-redirecting to dashboard...');
     setTimeout(() => {
@@ -225,13 +231,33 @@ function BookingTrackingContent() {
     }, 2000); // 2 second delay to show success message
   };
 
-  // Auto-redirect on success modal show
+  // Handle QR code click - NO CHANGES (keep original behavior)
+  const handleQRClick = async () => {
+    console.log('\n' + '='.repeat(60));
+    console.log(' QR CODE CLICKED');
+    console.log('='.repeat(60));
+    console.log(` Booking ID: ${bookingId}`);
+    console.log(` Station: ${bookingData?.chargerName || mockBookingData.stationName}`);
+    console.log(` Vehicle Model: ${bookingData?.vehicleModel || mockBookingData.vehicleModel}`);
+    console.log(` Vehicle Number: ${bookingData?.vehicleNumber || mockBookingData.vehicleNumber}`);
+    console.log(` Connector: ${bookingData?.connectorType || mockBookingData.connector}`);
+    console.log(` Charger Type: ${bookingData?.chargerId?.type || mockBookingData.chargerType}`);
+    console.log(` Amount: ₹${bookingData?.amount || mockBookingData.amount.replace('₹', '')}`);
+    console.log('='.repeat(60));
+    console.log(' USER PASSWORD INFORMATION:');
+    console.log('  • Password is 6-8 digits (per ChargeFlow spec)');
+    console.log('  • Password is user-bound (not booking-specific)');
+    console.log('  • Password was generated during booking ACCEPTANCE');
+    console.log('  • Check terminal logs from acceptance phase for password');
+    console.log('  • Same password works for ALL bookings by this user');
+    console.log('='.repeat(60));
+  };
+
   useEffect(() => {
     if (verificationStatus === "success" && showModal) {
       const redirectTimer = setTimeout(() => {
         handleCloseSuccessModal();
       }, 3000); // 3 seconds to read success message
-      
       return () => clearTimeout(redirectTimer);
     }
   }, [verificationStatus, showModal, bookingId]);
@@ -258,9 +284,9 @@ function BookingTrackingContent() {
               updateUserData({ isOnline: newStatus });
             }}
           />
-          
+
           {/* Tabs Section (same as other bookings pages) */}
-          <div className="bookings-tabs" style={{marginTop: '1rem'}}>
+          <div className="bookings-tabs" style={{ marginTop: '1rem' }}>
             {['Overview', 'My Chargers', 'Bookings', 'Earnings', 'Wallet', 'Reviews'].map((tab) => {
               const isActive = activeTab === tab;
               return (
@@ -340,15 +366,15 @@ function BookingTrackingContent() {
                 <img src={bookingData?.vehicleImage || mockBookingData.vehicleImage} alt={bookingData?.vehicleModel || mockBookingData.vehicleModel} />
               </div>
               <div className="tracking-vehicle-model">{bookingData?.vehicleModel || mockBookingData.vehicleModel}</div>
-              
+
               <h2 className="tracking-station-name">{bookingData?.chargerName || mockBookingData.stationName}</h2>
-              
+
               {/* Show booking status and helpful info */}
               {bookingData ? (
-                <div style={{ 
-                  padding: "8px 12px", 
-                  backgroundColor: "#e8f5e8", 
-                  borderRadius: "6px", 
+                <div style={{
+                  padding: "8px 12px",
+                  backgroundColor: "#e8f5e8",
+                  borderRadius: "6px",
                   marginBottom: "12px",
                   fontSize: "12px",
                   color: "#2d5a2d"
@@ -356,10 +382,10 @@ function BookingTrackingContent() {
                   ✅ Booking Found - Status: {bookingData.status}
                 </div>
               ) : (
-                <div style={{ 
-                  padding: "8px 12px", 
-                  backgroundColor: "#fff3cd", 
-                  borderRadius: "6px", 
+                <div style={{
+                  padding: "8px 12px",
+                  backgroundColor: "#fff3cd",
+                  borderRadius: "6px",
                   marginBottom: "12px",
                   fontSize: "12px",
                   color: "#856404"
@@ -367,53 +393,53 @@ function BookingTrackingContent() {
                   ⚠️ Using Mock Data - Check console for available booking IDs
                 </div>
               )}
-              
+
               <div className="booking-request-info">
                 <div className="booking-info-item">
                   <span className="booking-info-icon-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16m11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5s-.67 1.5-1.5 1.5M5 11l1.5-4.5h11L19 11z"/>
+                      <path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16m11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5s-.67 1.5-1.5 1.5M5 11l1.5-4.5h11L19 11z" />
                     </svg>
                   </span>
                   <span className="booking-info-label">Vehicle Number:</span>
                   <span className="booking-info-value">{bookingData?.vehicleNumber || mockBookingData.vehicleNumber}</span>
                 </div>
-                
+
                 <div className="booking-info-item">
                   <span className="booking-info-icon-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"/>
-                      <path fill="currentColor" d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2M19 8l.001 12H5V8z"/>
+                      <path fill="currentColor" d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z" />
+                      <path fill="currentColor" d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2M19 8l.001 12H5V8z" />
                     </svg>
                   </span>
                   <span className="booking-info-label">Connector Gun1:</span>
                   <span className="booking-info-value">{bookingData?.connectorType || mockBookingData.connector}</span>
                 </div>
-                
+
                 <div className="booking-info-item">
                   <span className="booking-info-icon-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66c.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21"/>
+                      <path fill="currentColor" d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66c.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21" />
                     </svg>
                   </span>
                   <span className="booking-info-label">Charger Type:</span>
                   <span className="booking-info-value">{bookingData?.chargerId?.type || mockBookingData.chargerType}</span>
                 </div>
-                
+
                 <div className="booking-info-item">
                   <span className="booking-info-icon-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M15 11V5l-3-3l-3 3v2H3v14h8v-4c0-1.1.9-2 2-2s2 .9 2 2v4h8V11z"/>
+                      <path fill="currentColor" d="M15 11V5l-3-3l-3 3v2H3v14h8v-4c0-1.1.9-2 2-2s2 .9 2 2v4h8V11z" />
                     </svg>
                   </span>
                   <span className="booking-info-label">Total Unit:</span>
                   <span className="booking-info-value">{bookingData?.unitPrice || mockBookingData.unitPrice}</span>
                 </div>
-                
+
                 <div className="booking-info-item">
                   <span className="booking-info-icon-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/>
+                      <path fill="currentColor" d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15" />
                     </svg>
                   </span>
                   <span className="booking-info-label">Amount:</span>
@@ -422,45 +448,117 @@ function BookingTrackingContent() {
               </div>
               {/* Separator Line */}
               <div className="tracking-separator-line"></div>
-              {/* OTP Section */}
-              <div className="tracking-otp-section">
-                <div className="tracking-otp-label">OTP</div>
-                {!bookingId || bookingId.length !== 24 ? (
-                  <div style={{ padding: "10px", textAlign: "center", fontSize: "12px", color: "#666" }}>
-                    Note: Enter a valid booking ID in URL to verify OTP and update database
-                  </div>
-                ) : null}
-                {loading && otp.join("").length === 6 && (
-                  <div style={{ padding: "10px", textAlign: "center", fontSize: "14px" }}>
-                    Verifying...
-                  </div>
-                )}
-                <div className="tracking-otp-inputs">
-                  {otp.map((value, index) => (
-                    <input
-                      key={index}
-                      id={`otp-${index}`}
-                      type="text"
-                      maxLength={1}
-                      value={value}
-                      onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="tracking-otp-input"
-                      disabled={loading || verificationCompleted}
-                      suppressHydrationWarning
-                    />
-                  ))}
-                  <div className="tracking-qr-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M2 2h2v2H2z"/>
-                      <path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z"/>
-                      <path d="M6 10v6H0v-6zm-5 1v4h4v-4zm11-9h2v2h-2z"/>
-                      <path d="M10 0v6h6V0zm5 1v4h-4V1zM8 1V0h1v2H8v2H7V1zm0 5V4h1v2zM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8zm0 0v1H2V8H1v1H0V7h3v1zm10 1h-1V7h1zm-1 0h-1v2h2v-1h-1zm-4 0h2v1h-1v1h-1zm2 3v-1h-1v1h-1v1H9v1h3v-2zm0 0h3v1h-2v1h-1zm-4-1v1h1v-2H7v1z"/>
-                      <path d="M7 12h1v3h4v1H7zm9 2v2h-3v-1h2v-1z"/>
+
+              {/* Session Status Section */}
+              {bookingData?.status === 'VERIFIED' ? (
+                <div className="session-status-card">
+                  <div className="session-active-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" />
                     </svg>
                   </div>
+                  <h3 className="session-status-title">Session Active</h3>
+                  <p className="session-status-text">
+                    Charging is currently in progress. Your vehicle is drawing power.
+                  </p>
+                  <button
+                    className="session-action-btn session-btn-danger"
+                    onClick={async () => {
+                      if (confirm('Are you sure you want to end this charging session?')) {
+                        try {
+                          setLoading(true);
+                          await bookingsAPI.completeSession(bookingId);
+                          // Refresh data
+                          const data = await bookingsAPI.getBooking(bookingId);
+                          setBookingData(data);
+                          // alert('Session completed successfully');
+                          window.dispatchEvent(new CustomEvent('session-completed', {
+                            detail: { bookingId }
+                          }));
+                        } catch (error) {
+                          console.error('Error completing session:', error);
+                          alert('Failed to complete session');
+                        } finally {
+                          setLoading(false);
+                        }
+                      }
+                    }}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>Ending Session...</>
+                    ) : (
+                      <>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        </svg>
+                        End Charging Session
+                      </>
+                    )}
+                  </button>
                 </div>
-              </div>
+              ) : bookingData?.status === 'COMPLETED' ? (
+                <div className="session-status-card">
+                  <div className="session-completed-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <h3 className="session-status-title">Session Completed</h3>
+                  <p className="session-status-text">
+                    This charging session has been successfully completed.
+                  </p>
+                  <button
+                    className="session-action-btn session-btn-primary"
+                    onClick={() => router.push('/dashboard/bookings')}
+                  >
+                    Back to Bookings
+                  </button>
+                </div>
+              ) : (
+                /* OTP Section (Default for PENDING/ACCEPTED) */
+                <div className="tracking-otp-section">
+                  <div className="tracking-otp-label">Password</div>
+                  {!bookingId || bookingId.length !== 24 ? (
+                    <div style={{ padding: "10px", textAlign: "center", fontSize: "12px", color: "#666" }}>
+                      Note: Enter a valid booking ID in URL to verify password and update database
+                    </div>
+                  ) : null}
+                  {loading && otp.join("").length === 6 && (
+                    <div style={{ padding: "10px", textAlign: "center", fontSize: "14px" }}>
+                      Verifying...
+                    </div>
+                  )}
+                  <div className="tracking-otp-inputs">
+                    {otp.map((value, index) => (
+                      <input
+                        key={index}
+                        id={`otp-${index}`}
+                        type="text"
+                        maxLength={1}
+                        value={value}
+                        onChange={(e) => handleOtpChange(index, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        className="tracking-otp-input"
+                        disabled={loading || verificationCompleted}
+                        suppressHydrationWarning
+                      />
+                    ))}
+                    <div className="tracking-qr-icon" onClick={handleQRClick} style={{ cursor: 'pointer' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2 2h2v2H2z" />
+                        <path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z" />
+                        <path d="M6 10v6H0v-6zm-5 1v4h4v-4zm11-9h2v2h-2z" />
+                        <path d="M10 0v6h6V0zm5 1v4h-4V1zM8 1V0h1v2H8v2H7V1zm0 5V4h1v2zM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8zm0 0v1H2V8H1v1H0V7h3v1zm10 1h-1V7h1zm-1 0h-1v2h2v-1h-1zm-4 0h2v1h-1v1h-1zm2 3v-1h-1v1h-1v1H9v1h3v-2zm0 0h3v1h-2v1h-1zm-4-1v1h1v-2H7v1z" />
+                        <path d="M7 12h1v3h4v1H7zm9 2v2h-3v-1h2v-1h-1zm-4-1v1h1v-2H7v1z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "center", marginTop: "10px", fontSize: "12px", color: "#666" }}>
+                    Enter the 6-digit password generated from your User ID
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </main>
@@ -476,7 +574,7 @@ function BookingTrackingContent() {
               <>
                 <div className="verification-icon-container verification-icon-failed">
                   <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14 14L34 34M34 14L14 34" stroke="white" strokeWidth="4" strokeLinecap="round"/>
+                    <path d="M14 14L34 34M34 14L14 34" stroke="white" strokeWidth="4" strokeLinecap="round" />
                   </svg>
                 </div>
                 <h2 className="verification-title">Verification Failed</h2>
@@ -491,7 +589,7 @@ function BookingTrackingContent() {
               <>
                 <div className="verification-icon-container verification-icon-success">
                   <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 24L20 34L38 14" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M10 24L20 34L38 14" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <h2 className="verification-title">Verification Successfully!</h2>
