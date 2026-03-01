@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Wallet,
 } from "lucide-react";
+import { Icon } from "@iconify/react";
 import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
 import StatsCard from "@/components/dashboard/stats/StatsCard";
@@ -36,7 +37,7 @@ export default function EarningsPage() {
   const [isOnline, setIsOnline] = useState(userData.isOnline);
   const [activeTab, setActiveTab] = useState("Earnings");
 
-  const tabs = ["Overview", "My Chargers", "Bookings", "Earnings", "Wallet", "Reviews"];
+  const tabs = ["Overview", "My Chargers", "Bookings", "Earnings", "Wallet", "Support Tickets", "Reviews"];
 
   const handleTabClick = (tab: string) => {
     if (tab === "Overview") {
@@ -51,6 +52,8 @@ export default function EarningsPage() {
       router.push("/dashboard/wallet");
     } else if (tab === "Reviews") {
       router.push("/dashboard/reviews");
+    } else if (tab === "Support Tickets") {
+      router.push("/dashboard/support-tickets");
     } else {
       setActiveTab(tab);
     }
@@ -75,57 +78,67 @@ export default function EarningsPage() {
           />
 
           {/* Tabs Section */}
-          <div className="earnings-tabs">
+          <div className="dashboard-tabs">
             {tabs.map((tab) => {
               const isActive = activeTab === tab;
-              // Icon mapping for each tab
-              const iconMap: { [key: string]: React.ComponentType<any> } = {
-                "Overview": FileText,
-                "Bookings": CalendarCheck,
-                "Earnings": HandCoins,
-                "Wallet": Wallet,
-                "Reviews": MessageSquare,
+              const tabIconMap: { [key: string]: React.ComponentType<any> } = {
+                Overview: FileText,
+                Bookings: CalendarCheck,
+                Earnings: HandCoins,
+                Wallet,
+                Reviews: MessageSquare,
               };
-              const Icon = iconMap[tab];
+              const LucideIcon = tabIconMap[tab];
               const isMyChargers = tab === "My Chargers";
+              const isSupportTab = tab === "Support Tickets";
 
               return (
                 <button
                   key={tab}
                   onClick={() => handleTabClick(tab)}
-                  className="earnings-tab"
+                  className={`dashboard-tab flex items-center gap-1 md:gap-2 font-medium transition-all rounded-lg ${
+                    isActive ? "active" : ""
+                  }`}
                   style={{
-                    backgroundColor: isActive ? 'rgba(56, 239, 10, 1)' : 'white',
-                    color: isActive ? 'white' : '#374151',
-                    boxShadow: isActive ? 'none' : '0px 1px 2px rgba(0, 0, 0, 0.1)',
-                    cursor: 'pointer',
+                    backgroundColor: isActive ? "rgba(56, 239, 10, 1)" : "white",
+                    color: isActive ? "white" : "#374151",
+                    boxShadow: isActive ? "none" : "0px 1px 2px rgba(0, 0, 0, 0.1)",
+                    cursor: "pointer",
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
+                      e.currentTarget.style.backgroundColor = "rgba(52, 199, 89, 0.1)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'white';
+                      e.currentTarget.style.backgroundColor = "white";
                     }
                   }}
                 >
                   {isMyChargers ? (
                     <span
-                      className="material-symbols-rounded tab-icon"
+                      className="material-symbols-rounded text-base md:text-2xl"
                       style={{
-                        color: isActive ? 'white' : '#374151',
+                        color: isActive ? "white" : "#374151",
                       }}
                     >
                       ev_charger
                     </span>
+                  ) : isSupportTab ? (
+                    <Icon
+                      icon="mynaui:ticket"
+                      className="w-4 h-4 md:w-6 md:h-6"
+                      style={{
+                        color: isActive ? "white" : "#374151",
+                      }}
+                    />
                   ) : (
-                    Icon && (
-                      <Icon
-                        className="tab-icon"
+                    LucideIcon && (
+                      <LucideIcon
+                        className="w-4 h-4 md:w-6 md:h-6"
                         style={{
-                          color: isActive ? 'white' : '#374151',
+                          color: isActive ? "white" : "#374151",
                         }}
                       />
                     )

@@ -34,6 +34,9 @@ router.get('/management', bookingController.getBookingManagement);
 // GET /api/bookings - Get all bookings with filters
 router.get('/', bookingController.getAllBookings);
 
+// GET /api/bookings/today - Get today's confirmed bookings
+router.get('/today', bookingController.getTodaysBookings);
+
 // GET /api/bookings/:id - Get single booking
 router.get('/:id', bookingController.getBookingById);
 

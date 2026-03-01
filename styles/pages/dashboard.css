@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  gap: 4px;
+  gap: 24px;
   margin-bottom: 24px;
   padding: 4px 6px;
   width: 100%;
@@ -185,7 +185,7 @@
   }
 
   .dashboard-tabs {
-    gap: 8px;
+    gap: 24px;
     padding: 8px 10px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -200,12 +200,13 @@
   }
 
   .dashboard-tab {
-    min-width: 100px;
+    width: 210px;
+    min-width: 210px;
+    flex: 0 0 210px;
     height: 48px;
     padding: 10px 12px;
     gap: 8px;
     font-size: 20px;
-    flex-shrink: 0;
   }
 
   .dashboard-tab .tab-icon {
@@ -276,22 +277,25 @@
   }
 
   .dashboard-tabs {
-    gap: 12px;
+    gap: 24px;
     padding: 8px 10px;
     flex-wrap: nowrap;
-    justify-content: flex-start; /* Changed from space-between */
-    overflow-x: auto; /* Add this */
-    -webkit-overflow-scrolling: touch; /* Add this */
+    justify-content: flex-start;
+    /* Changed from space-between */
+    overflow-x: auto;
+    /* Add this */
+    -webkit-overflow-scrolling: touch;
+    /* Add this */
   }
 
   .dashboard-tab {
-    min-width: 110px;
-    width: auto;
+    width: 210px;
+    min-width: 210px;
+    flex: 0 0 210px;
     height: 50px;
     font-size: 20px;
     padding: 10px 14px;
     gap: 6px;
-    flex: 1;
   }
 
   .dashboard-tab .tab-icon {
@@ -318,7 +322,7 @@
   }
 
   .performance-metrics-card {
-    
+
     max-width: 680px;
   }
 
@@ -338,13 +342,14 @@
 
 @media (min-width: 1280px) {
   .dashboard-tabs {
-    gap: 20px;
+    gap: 24px;
   }
 
-   .dashboard-tabs {
-      overflow-x: visible;
-      justify-content: space-between;
-    }
+  .dashboard-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 767px) {
@@ -505,4 +510,3 @@
   scrollbar-width: thin;
   scrollbar-color: #E5E5EA transparent;
 }
-

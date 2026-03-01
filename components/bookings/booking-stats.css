@@ -165,22 +165,22 @@
 
 /* Responsive Design */
 
-/* Mobile View - Keep Original */
+/* Mobile View - 2x2 Grid */
 @media (max-width: 767px) {
   .booking-stats-container {
-    flex-direction: column;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     padding: 0 12px;
     margin-bottom: 24px;
   }
 
   .booking-stat-card {
     width: 100%;
-    max-width: 230px;
-    min-height: 125px;
-    margin: 0 auto;
-    height: 110px;
+    min-height: 110px;
+    height: auto;
     padding: 16px;
+    flex-shrink: unset;
   }
 
   .booking-stat-icon-container {
@@ -206,21 +206,23 @@
   }
 }
 
-/* Tablet/Laptop View - Modified to show all 4 cards in one line */
+/* Tablet View - 2x2 Grid */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
   .booking-stats-container {
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
     padding: 0 16px;
-    flex-wrap: nowrap;
+    flex-wrap: unset;
   }
-  
+
   .booking-stat-card {
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
+    width: 180px;
+    min-width: unset;
+    max-width: unset;
     height: 115px;
     padding: 14px;
-    flex-shrink: 0;
+    flex-shrink: unset;
   }
 
   .booking-stat-icon-container {

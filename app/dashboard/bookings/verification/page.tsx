@@ -2,6 +2,13 @@
 
 import React, { useState, Suspense, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import {
+  FileText,
+  CalendarCheck,
+  HandCoins,
+  MessageSquare,
+  Wallet,
+} from "lucide-react";
 import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
 import BookingStats from "@/components/bookings/BookingStats";
@@ -289,6 +296,17 @@ function BookingTrackingContent() {
           <div className="bookings-tabs" style={{ marginTop: '1rem' }}>
             {['Overview', 'My Chargers', 'Bookings', 'Earnings', 'Wallet', 'Reviews'].map((tab) => {
               const isActive = activeTab === tab;
+              // Icon mapping for each tab
+              const iconMap: { [key: string]: React.ComponentType<any> } = {
+                "Overview": FileText,
+                "Bookings": CalendarCheck,
+                "Earnings": HandCoins,
+                "Wallet": Wallet,
+                "Reviews": MessageSquare,
+              };
+              const Icon = iconMap[tab];
+              const isMyChargers = tab === "My Chargers";
+
               return (
                 <button
                   key={tab}
@@ -315,8 +333,38 @@ function BookingTrackingContent() {
                     backgroundColor: isActive ? 'rgba(56, 239, 10, 1)' : 'white',
                     color: isActive ? 'white' : '#374151',
                   }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'white';
+                    }
+                  }}
                   suppressHydrationWarning
                 >
+                  {isMyChargers ? (
+                    <span
+                      className="material-symbols-rounded w-4 h-4 md:text-2xl"
+                      style={{
+                        fontSize: '16px',
+                        color: isActive ? 'white' : '#374151',
+                      }}
+                    >
+                      ev_charger
+                    </span>
+                  ) : (
+                    Icon && (
+                      <Icon
+                        className="w-4 h-4 md:w-6 md:h-6"
+                        style={{
+                          color: isActive ? 'white' : '#374151',
+                        }}
+                      />
+                    )
+                  )}
                   {tab}
                 </button>
               );

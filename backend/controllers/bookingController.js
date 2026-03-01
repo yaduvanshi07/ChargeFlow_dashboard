@@ -112,6 +112,14 @@ exports.acceptBooking = async (req, res) => {
         booking.acceptedAt = new Date();
         await booking.save();
 
+        // Debug logging to help trace acceptance -> today's bookings visibility
+        console.debug('[acceptBooking] Booking accepted:', {
+            id: booking._id.toString(),
+            bookingId: booking.bookingId,
+            status: booking.status,
+            scheduledDateTime: booking.scheduledDateTime ? booking.scheduledDateTime.toISOString() : null
+        });
+
         await booking.populate('chargerId', 'name location type power status');
 
         // Create or fetch user for this booking (no password generation at this stage)
@@ -246,6 +254,20 @@ exports.simulatePayment = async (req, res) => {
             bookingMgmt.passwordId = passwordRecord._id;
         }
         await bookingMgmt.save();
+
+        // Also reflect confirmation on the Booking document itself so
+        // that `GET /api/bookings/today` (which filters by Booking.status)
+        // will include this booking.
+        booking.status = 'CONFIRMED';
+        booking.confirmedAt = new Date();
+        await booking.save();
+
+        console.debug('[simulatePayment] Booking updated to CONFIRMED:', {
+            id: booking._id.toString(),
+            bookingId: booking.bookingId,
+            status: booking.status,
+            scheduledDateTime: booking.scheduledDateTime ? booking.scheduledDateTime.toISOString() : null
+        });
 
         // Log to terminal (backend only, never to API)
         console.log('\n' + '='.repeat(60));
@@ -534,7 +556,7 @@ exports.getAllBookings = async (req, res) => {
         const chargerId = req.query.chargerId;
 
         const query = {};
-        if (status && ['PENDING', 'ACCEPTED', 'VERIFIED', 'CANCELLED', 'MISSED', 'COMPLETED'].includes(status)) {
+        if (status && ['PENDING', 'ACCEPTED', 'CONFIRMED', 'VERIFIED', 'CANCELLED', 'MISSED', 'COMPLETED'].includes(status)) {
             query.status = status;
         }
         if (chargerId) {
@@ -774,5 +796,70 @@ exports.completeSession = async (req, res) => {
         });
     } finally {
         session.endSession();
+    }
+};
+
+// ============================================================================
+// NEW FEATURE: TODAY's BOOKINGS (ISOLATED ENDPOINT)
+// ============================================================================
+
+/**
+ * Get Today's Bookings
+ * 
+ * Fetches bookings where:
+ * - scheduledDateTime is within today (00:00:00.000 to 23:59:59.999 server time)
+ * - status is ACCEPTED, VERIFIED, or COMPLETED
+ * - sorted by scheduledDateTime ascending
+ * 
+ * This logic is completely isolated and does not affect other filters or routes.
+ */
+exports.getTodaysBookings = async (req, res) => {
+    try {
+        // Compute start and end of today using UTC day boundaries to avoid
+        // server/client timezone mismatches. Bookings are stored in UTC in MongoDB,
+        // so querying with UTC boundaries ensures consistent results regardless of
+        // server timezone or client input formatting.
+        const now = new Date();
+        const startOfDayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+        const endOfDayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999));
+
+        // Define strict isolated query rules
+        const query = {
+            // Use UTC boundaries stored above
+            scheduledDateTime: {
+                $gte: startOfDayUTC,
+                $lte: endOfDayUTC
+            },
+            status: {
+                // Include CONFIRMED as well as other active statuses
+                $in: ['ACCEPTED', 'CONFIRMED', 'VERIFIED', 'COMPLETED']
+            }
+        };
+
+        // Helpful debug logging when investigating missing/late updates
+        console.debug('[getTodaysBookings] Querying todays bookings with range:', {
+            startOfDayUTC: startOfDayUTC.toISOString(),
+            endOfDayUTC: endOfDayUTC.toISOString(),
+            queryStatus: query.status
+        });
+
+        const todaysBookings = await Booking.find(query)
+            .populate('chargerId', 'name location type power status')
+            .populate('transactionId')
+            .sort({ scheduledDateTime: 1 }); // Sort by time ascending
+
+        res.status(200).json({
+            success: true,
+            message: "Today's bookings fetched successfully",
+            data: todaysBookings
+        });
+
+    } catch (error) {
+        console.error('Error fetching today\'s bookings:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };

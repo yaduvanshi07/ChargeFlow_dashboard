@@ -1,0 +1,372 @@
+/* Ticket Modal Overlay */
+.ticket-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: fadeIn 0.2s ease-out;
+    overflow-y: auto;
+}
+
+/* Base Modal Styling */
+.ticket-modal-content {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 626px;
+    max-height: 90vh;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn 0.2s ease-out;
+    overflow: hidden;
+}
+
+/* Header */
+.ticket-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid #E5E5EA;
+}
+
+.ticket-modal-header h2 {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: #364153;
+    margin: 0;
+}
+
+.ticket-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.ticket-modal-close:hover {
+    background-color: #f0f0f0;
+}
+
+/* Body / Form Area */
+.ticket-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form Groups */
+.ticket-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ticket-form-group label {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: #364153;
+}
+
+.ticket-helper-text {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    color: #6B7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Inputs & Textareas */
+.ticket-input,
+.ticket-textarea {
+    width: 100%;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    color: #111827;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.ticket-input::placeholder,
+.ticket-textarea::placeholder {
+    color: #9CA3AF;
+}
+
+.ticket-input:focus,
+.ticket-textarea:focus {
+    border-color: #38EF0A;
+}
+
+.ticket-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Select wrapper styling */
+.ticket-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.ticket-select {
+    appearance: none;
+    padding-right: 40px;
+}
+
+.ticket-select.ticket-placeholder {
+    color: #9CA3AF;
+}
+
+.ticket-select-wrapper .select-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6B7280;
+    pointer-events: none;
+    font-size: 20px;
+}
+
+/* Validation Errors */
+.ticket-error {
+    font-size: 12px;
+    color: #DC2626;
+    margin-top: -4px;
+}
+
+/* Drag-and-Drop Box — updated per design spec */
+.ticket-upload-box {
+    width: 100%;
+    max-width: 330px;
+    margin: 0 auto;
+
+    min-height: 163px;
+    border-radius: 7.47px;
+    border: 1.25px dashed #AAAAAA;
+    background: #ECFFEF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.ticket-upload-box:hover {
+    background-color: #d8fce0;
+    border-color: #38EF0A;
+}
+
+.ticket-upload-box .upload-main-text {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: capitalize;
+    color: #5A5A5A;
+    margin: 0;
+}
+
+.ticket-upload-box .upload-sub-text {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: capitalize;
+    color: #848484;
+    margin: 0;
+}
+
+.upload-browse-btn {
+    margin-top: 4px;
+    width: 85px;
+    height: 26.5625px;
+    border-radius: 5.31px;
+    padding: 5.31px;
+    gap: 5.31px;
+    background: #FFFFFF;
+    border: 0.53px solid #AAAAAA;
+    cursor: pointer;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: capitalize;
+    color: #171717;
+    transition: border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.upload-browse-btn:hover {
+    border-color: #374151;
+}
+
+.ticket-file-name {
+    font-size: 12px;
+    color: #059669;
+    margin-top: -4px;
+}
+
+/* Submit Button */
+.ticket-submit-btn {
+    margin-top: 12px;
+    width: 100%;
+    max-width: 460px;
+    align-self: center;
+    height: 50px;
+    background: #38EF0A;
+    color: #ffffff;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    border: 1px solid #38EF0A;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0px 2px 4.9px 0px #00000033;
+    transition: opacity 0.3s ease, transform 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 29px;
+    gap: 1px;
+    box-sizing: border-box;
+}
+
+.ticket-submit-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.ticket-submit-btn:active {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive — Tablet */
+@media (max-width: 768px) {
+    .ticket-modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .ticket-modal-content {
+        max-height: 95vh;
+        border-radius: 16px 16px 0 0;
+        max-width: 100%;
+    }
+
+    .ticket-modal-header {
+        padding: 20px 16px 14px 16px;
+    }
+
+    .ticket-modal-header h2 {
+        font-size: 20px;
+    }
+
+    .ticket-modal-body {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .ticket-form-group label {
+        font-size: 16px;
+    }
+
+    .ticket-submit-btn {
+        max-width: 100%;
+        font-size: 17px;
+    }
+
+    .ticket-upload-box {
+        max-width: 100%;
+    }
+}
+
+/* Responsive — Mobile */
+@media (max-width: 480px) {
+    .ticket-modal-header h2 {
+        font-size: 18px;
+    }
+
+    .ticket-form-group label {
+        font-size: 15px;
+    }
+
+    .ticket-submit-btn {
+        font-size: 16px;
+        height: 46px;
+    }
+
+    .ticket-upload-box {
+        max-width: 100%;
+        min-height: 140px;
+    }
+}

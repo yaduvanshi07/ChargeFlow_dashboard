@@ -603,7 +603,7 @@ export default function EditChargerForm({ isOpen, onClose, charger, onChargerUpd
         </div>
       )}
 
-      {/* Delete Charger Modal - EXACT DESIGN FROM FIRST IMAGE */}
+      {/* Delete Charger Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div
@@ -698,7 +698,7 @@ export default function EditChargerForm({ isOpen, onClose, charger, onChargerUpd
                   </button>
                 </div>
                 <div className="flex justify-end mt-2">
-                  <a href="#" className="text-[14px] text-[#00C853] hover:text-green-700 font-medium">
+                  <a href="#" className="text-[14px] text-[#2BBF06] hover:text-green-700 font-medium">
                     Forget Password?
                   </a>
                 </div>
@@ -724,7 +724,7 @@ export default function EditChargerForm({ isOpen, onClose, charger, onChargerUpd
                   <button
                     type="button"
                     onClick={handleResendOTP}
-                    className="text-[14px] text-[#00C853] hover:text-green-700 font-semibold whitespace-nowrap"
+                    className="text-[14px] text-[#2BBF06] hover:text-green-700 font-semibold whitespace-nowrap"
                   >
                     Resend OTP
                   </button>

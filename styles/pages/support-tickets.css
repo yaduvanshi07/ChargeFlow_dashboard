@@ -1,0 +1,481 @@
+.support-tickets-wrapper {
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.support-tickets-inner {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.support-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.support-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: capitalize;
+  color: #171717;
+  margin: 0;
+  margin-top: 50px;
+}
+
+.support-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Primary Button: Create New Ticket ── */
+.support-primary-button {
+  width: 245px;
+  height: 50px;
+  border-radius: 9px;
+  padding: 10px;
+  background: linear-gradient(185.9deg, #32FC00 4.88%, #06CB20 95.59%);
+  color: #ffffff;
+  border: none;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+  box-shadow: 0px 3px 8px rgba(6, 203, 32, 0.35);
+  transition: opacity 0.3s ease-out, transform 0.15s ease-out;
+}
+
+.support-primary-button:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.support-primary-button:active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.support-primary-button .btn-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Secondary Button: Get Help ── */
+.support-secondary-button {
+  width: 162px;
+  height: 50px;
+  border-radius: 9px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #29B605;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #636363;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07);
+  transition: background-color 0.3s ease-out, transform 0.15s ease-out;
+}
+
+.support-secondary-button:hover {
+  background-color: rgba(41, 182, 5, 0.06);
+  transform: translateY(-1px);
+}
+
+.support-secondary-button:active {
+  transform: translateY(0);
+}
+
+.support-secondary-button .btn-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Table Section ── */
+.support-table-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 50px;
+}
+
+.support-subtitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #171717;
+  margin-top: 50px;
+  margin-bottom: 24px;
+}
+
+/* ── Table Card ── */
+.support-table-card {
+  width: 100%;
+  border-radius: 15px;
+  border: 1px solid #e5e5ea;
+  box-shadow: 0px 2px 5.3px 0px rgba(0, 0, 0, 0.24);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.support-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 480px;
+}
+
+.support-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+/* ── Table Header ── */
+.support-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #A0FF89;
+}
+
+.support-table thead tr {
+  height: 75px;
+}
+
+.support-table th {
+  padding: 16px 20px;
+  text-align: left;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #364153;
+  white-space: nowrap;
+  border-bottom: 1px solid #bcbcbc;
+}
+
+/* Center the Status column header */
+.support-table th:nth-child(4) {
+  text-align: center;
+}
+
+/* ── Table Body ── */
+.support-table tbody tr {
+  height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid #e9e9e9;
+  transition: background-color 0.2s ease;
+}
+
+.support-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.support-table tbody tr:hover {
+  background-color: rgba(160, 255, 137, 0.2);
+}
+
+.support-table td {
+  padding: 16px 20px;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #364153;
+  white-space: nowrap;
+}
+
+/* Center the Status column cell */
+.support-table td:nth-child(4) {
+  text-align: center;
+}
+
+/* ── Status Badges ── */
+
+/* In Progress */
+.status-badge-inprogress {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 110px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: #D25B0024;
+  border: 1px solid #B7794A4D;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.status-badge-inprogress .status-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #DC7527;
+  line-height: 1;
+}
+
+.status-badge-inprogress .status-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+  text-transform: capitalize;
+  color: #DC7527;
+  white-space: nowrap;
+}
+
+/* Open */
+.status-badge-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 110px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: #1877F224;
+  border: 1px solid #1877F275;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.status-badge-open .status-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1877F2;
+  line-height: 1;
+}
+
+.status-badge-open .status-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+  text-transform: capitalize;
+  color: #1877F2;
+  white-space: nowrap;
+}
+
+/* Resolved */
+.status-badge-resolved {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 110px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: #29B60530;
+  border: 1px solid #29B6055C;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.status-badge-resolved .status-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #29B605;
+  line-height: 1;
+}
+
+.status-badge-resolved .status-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+  text-transform: capitalize;
+  background: #29B605;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+}
+
+/* ── Action (View) Button ── */
+.support-table-action-button {
+  width: 83px;
+  height: 33px;
+  padding: 7px 13px;
+  gap: 5px;
+  border-radius: 7px;
+  border: 1px solid #29B6054F;
+  background: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #757575;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+  animation-timing-function: ease-out;
+  animation-duration: 300ms;
+}
+
+.support-table-action-button:hover {
+  background-color: rgba(41, 182, 5, 0.05);
+  border-color: #29B605;
+}
+
+.support-table-action-button:active {
+  background-color: rgba(41, 182, 5, 0.1);
+}
+
+.support-table-action-button .action-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575;
+  line-height: 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .support-title,
+  .support-subtitle {
+    font-size: 30px;
+  }
+
+  .support-table th {
+    font-size: 20px;
+  }
+
+  .support-table td {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 767px) {
+  .support-tickets-inner {
+    padding: 0;
+  }
+
+  .support-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .support-title {
+    font-size: 26px;
+    margin-top: 24px;
+    text-align: left;
+  }
+
+  .support-subtitle {
+    font-size: 24px;
+  }
+
+  .support-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .support-primary-button {
+    width: auto;
+    min-width: 200px;
+    font-size: 16px;
+    height: 44px;
+  }
+
+  .support-secondary-button {
+    width: auto;
+    min-width: 130px;
+    font-size: 16px;
+    height: 44px;
+  }
+
+  .support-table th {
+    font-size: 16px;
+    padding: 12px 14px;
+  }
+
+  .support-table td {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .support-table thead tr {
+    height: 58px;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-primary-button {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .support-secondary-button {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .support-actions {
+    flex-direction: column;
+  }
+}

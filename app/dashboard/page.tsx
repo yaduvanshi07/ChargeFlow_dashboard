@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Zap,
@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Wallet,
 } from "lucide-react";
+import { Icon } from "@iconify/react";
 import Navbar from "@/components/common/Navbar";
 import DashboardHeader from "@/components/common/DashboardHeader";
 import RevenueStatCards from "@/components/dashboard/stats/RevenueStatCards";
@@ -26,9 +27,10 @@ import {
   statsData,
   performanceMetrics,
   recentActivities,
-  todaysBookings,
+  todaysBookings, // Bring this back to use as a fallback dummy data example
   revenueData,
 } from "@/lib/mockData";
+import { bookingsAPI } from "@/lib/api";
 import { useUser } from "@/contexts/UserContext";
 
 // Icon mapping for performance metrics
@@ -45,7 +47,26 @@ export default function DashboardPage() {
   const [isOnline, setIsOnline] = useState(userData.isOnline);
   const [activeTab, setActiveTab] = useState("Overview");
 
-  const tabs = ["Overview", "My Chargers", "Bookings", "Earnings", "Wallet", "Reviews"];
+  // State for live Today's Bookings
+  const [realTodaysBookings, setRealTodaysBookings] = useState<any[]>([]);
+  const [isLoadingBookings, setIsLoadingBookings] = useState(true);
+
+  // Fetch Today's Bookings via the shared API helper (uses correct base URL)
+  React.useEffect(() => {
+    const fetchTodaysBookings = async () => {
+      try {
+        const data = await bookingsAPI.getTodaysBookings();
+        setRealTodaysBookings(data ?? []);
+      } catch (error) {
+        console.error("Failed to fetch today's bookings:", error);
+      } finally {
+        setIsLoadingBookings(false);
+      }
+    };
+    fetchTodaysBookings();
+  }, []);
+
+  const tabs = ["Overview", "My Chargers", "Bookings", "Earnings", "Wallet", "Support Tickets", "Reviews"];
 
   const handleTabClick = (tab: string) => {
     if (tab === "My Chargers") {
@@ -58,6 +79,8 @@ export default function DashboardPage() {
       router.push("/dashboard/wallet");
     } else if (tab === "Reviews") {
       router.push("/dashboard/reviews");
+    } else if (tab === "Support Tickets") {
+      router.push("/dashboard/support-tickets");
     } else {
       setActiveTab(tab);
     }
@@ -85,30 +108,66 @@ export default function DashboardPage() {
           <div className="dashboard-tabs">
             {tabs.map((tab) => {
               const isActive = activeTab === tab;
-              // Icon mapping for each tab
-              const iconMap: { [key: string]: React.ComponentType<any> } = {
-                "Overview": FileText,
-                "Bookings": CalendarCheck,
-                "Earnings": HandCoins,
-                "Wallet": Wallet,
-                "Reviews": MessageSquare,
+              const tabIconMap: { [key: string]: React.ComponentType<any> } = {
+                Overview: FileText,
+                Bookings: CalendarCheck,
+                Earnings: HandCoins,
+                Wallet,
+                Reviews: MessageSquare,
               };
-              const Icon = iconMap[tab];
+              const LucideIcon = tabIconMap[tab];
               const isMyChargers = tab === "My Chargers";
+              const isSupportTab = tab === "Support Tickets";
 
               return (
                 <button
                   key={tab}
                   onClick={() => handleTabClick(tab)}
-                  className={`dashboard-tab ${isActive ? 'active' : ''}`}
+                  className={`dashboard-tab flex items-center gap-1 md:gap-2 font-medium transition-all rounded-lg ${
+                    isActive ? "active" : ""
+                  }`}
+                  style={{
+                    backgroundColor: isActive ? "rgba(56, 239, 10, 1)" : "white",
+                    color: isActive ? "white" : "#374151",
+                    boxShadow: isActive ? "none" : "0px 1px 2px rgba(0, 0, 0, 0.1)",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = "rgba(52, 199, 89, 0.1)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = "white";
+                    }
+                  }}
                 >
                   {isMyChargers ? (
-                    <span className="material-symbols-rounded tab-icon">
+                    <span
+                      className="material-symbols-rounded text-base md:text-2xl"
+                      style={{
+                        color: isActive ? "white" : "#374151",
+                      }}
+                    >
                       ev_charger
                     </span>
+                  ) : isSupportTab ? (
+                    <Icon
+                      icon="mynaui:ticket"
+                      className="w-4 h-4 md:w-6 md:h-6"
+                      style={{
+                        color: isActive ? "white" : "#374151",
+                      }}
+                    />
                   ) : (
-                    Icon && (
-                      <Icon className="tab-icon" />
+                    LucideIcon && (
+                      <LucideIcon
+                        className="w-4 h-4 md:w-6 md:h-6"
+                        style={{
+                          color: isActive ? "white" : "#374151",
+                        }}
+                      />
                     )
                   )}
                   {tab}
@@ -209,19 +268,53 @@ export default function DashboardPage() {
                 Today&apos;s Bookings
               </h2>
               <div className="space-y-3 bookings-scrollable">
-                {todaysBookings.map((booking, index) => (
-                  <BookingItem
-                    key={index}
-                    time={booking.time}
-                    duration={booking.duration}
-                    chargerName={booking.chargerName}
-                    customerName={booking.customerName}
-                    vehicleName={booking.vehicleName}
-                    vehicleImage={booking.vehicleImage}
-                    vehicleType={booking.vehicleType}
-                    status={booking.status}
-                  />
-                ))}
+                {isLoadingBookings ? (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500"></div>
+                  </div>
+                ) : realTodaysBookings.length === 0 ? (
+                  // Fallback to dummy data to show how it looks when there are no live API bookings yet
+                  todaysBookings.slice(0, 1).map((booking, index) => (
+                    <div key={`dummy-${index}`} className="relative">
+                      {/* Optional Dummy Label */}
+                      <span className="absolute top-2 right-2 bg-gray-200 text-gray-500 text-xs px-2 py-0.5 rounded-full z-10">Demo Data</span>
+                      <BookingItem
+                        time={booking.time}
+                        duration={booking.duration}
+                        chargerName={booking.chargerName}
+                        customerName={booking.customerName}
+                        vehicleName={booking.vehicleName}
+                        vehicleImage={booking.vehicleImage}
+                        vehicleType={booking.vehicleType}
+                        status={booking.status}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  realTodaysBookings.map((booking: any, index: number) => {
+                    // Format time
+                    const dateObj = new Date(booking.scheduledDateTime);
+                    const timeString = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    // Format duration string (e.g., 2 hours, 1.5 hours)
+                    const durationStr = booking.duration ? `${booking.duration} hr` : 'N/A';
+
+                    // Fallback to defaults where data might be missing
+                    return (
+                      <BookingItem
+                        key={booking._id || index}
+                        time={timeString}
+                        duration={durationStr}
+                        chargerName={booking.chargerName || "Unknown Charger"}
+                        customerName={booking.customerName || "Customer"}
+                        vehicleName={booking.vehicleModel || "EV"}
+                        vehicleImage={""} // Cannot reliably know vehicle image from backend string
+                        vehicleType={booking.connectorType || "EV"}
+                        status={booking.status}
+                      />
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>

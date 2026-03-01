@@ -1,0 +1,209 @@
+/* Help Modal Overlay */
+.help-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: fadeIn 0.2s ease-out;
+    overflow-y: hidden;
+}
+
+/* Base Modal Styling */
+.help-modal-content {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn 0.2s ease-out;
+    overflow: hidden;
+}
+
+/* Header */
+.help-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 20px 24px;
+    border-bottom: 1px solid #E5E5EA;
+}
+
+.help-modal-header h2 {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 22px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: capitalize;
+    color: #171717;
+    margin: 0;
+    flex: 1;
+}
+
+.help-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.help-modal-close:hover {
+    background-color: #f0f0f0;
+}
+
+/* Body */
+.help-modal-body {
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Option Cards */
+.help-option-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 448px;
+    height: 125px;
+    padding-left: 25px;
+    padding-right: 25px;
+    background: #ffffff;
+    border: 1px solid #D1D5DB;
+    border-radius: 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    box-sizing: border-box;
+}
+
+.help-option-card:hover {
+    background-color: rgba(50, 252, 0, 0.04);
+    border-color: #A0FF89;
+    transform: translateY(-1px);
+}
+
+.help-option-card:active {
+    transform: translateY(0);
+}
+
+/* Icon Wrapper */
+.help-option-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    background-color: #38EF0A1C;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Chat Icon */
+.help-option-icon--chat {
+    width: 27.75px !important;
+    height: 26.02px !important;
+    color: #2CDE00;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+/* Call Icon */
+.help-option-icon--call {
+    width: 29.77px !important;
+    height: 29.82px !important;
+    color: #2CDE00;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+/* Text Container */
+.help-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.help-option-text h3 {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 21px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: left;
+    text-transform: capitalize;
+    color: #364153;
+    margin: 0;
+}
+
+.help-option-text p {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: #7C7C7C;
+    margin-top: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .help-modal-overlay {
+        align-items: flex-end;
+        padding: 16px;
+    }
+
+    .help-option-card {
+        width: 100%;
+        height: auto;
+        min-height: 100px;
+        padding: 20px;
+    }
+}

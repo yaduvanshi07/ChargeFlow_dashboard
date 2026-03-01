@@ -75,7 +75,8 @@ const bookingSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ['PENDING', 'ACCEPTED', 'VERIFIED', 'CANCELLED', 'MISSED', 'COMPLETED'],
+    // Added 'CONFIRMED' to support an additional host-confirmed state
+    enum: ['PENDING', 'ACCEPTED', 'CONFIRMED', 'VERIFIED', 'CANCELLED', 'MISSED', 'COMPLETED'],
     default: 'PENDING'
   },
   
@@ -125,6 +126,9 @@ const bookingSchema = new mongoose.Schema({
     default: Date.now
   },
   acceptedAt: {
+    type: Date
+  },
+  confirmedAt: {
     type: Date
   },
   cancelledAt: {

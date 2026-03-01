@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -10,6 +10,7 @@ export default function Navbar() {
   const [isMounted, setIsMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -17,7 +18,7 @@ export default function Navbar() {
 
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -35,11 +36,11 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!isMounted) return;
-    
+
     // Check localStorage for saved theme preference
     const savedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    
+
     if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
       setIsDarkMode(true);
       document.documentElement.classList.add("dark");
@@ -52,7 +53,7 @@ export default function Navbar() {
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
-    
+
     if (newDarkMode) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -62,11 +63,36 @@ export default function Navbar() {
     }
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isMobileMenuOpen && !target.closest('.mobile-menu-container')) {
+        closeMobileMenu();
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <nav 
+    <nav
       className={`sticky top-0 z-50 navbar-container ${isScrolled ? 'navbar-scrolled' : ''}`}
     >
-      <div 
+      <div
         className="w-full h-full mx-auto"
         style={{ maxWidth: '1440px' }}
       >
@@ -115,12 +141,77 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right Side Actions */}
-          <div className="navbar-actions">
+          {/* Mobile Menu Button - Only visible on mobile */}
+          <div className="md:hidden mobile-menu-container relative">
+            <button
+              onClick={toggleMobileMenu}
+              className="flex items-center justify-center hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700"
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '90px',
+                borderWidth: '1px',
+                border: '1px solid #B9B9B9',
+                opacity: 1,
+                backgroundColor: 'white',
+                boxShadow: '0px 0px 7.4px 0px rgba(0, 0, 0, 0.34)',
+              }}
+              aria-label="Menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <MoreVertical
+                style={{
+                  width: '19.678909301757812px',
+                  height: '19.678909301757812px',
+                  color: 'rgba(0, 0, 0, 0.7)',
+                  opacity: 1
+                }}
+              />
+            </button>
+
+            {/* Mobile Dropdown Menu */}
+            {isMobileMenuOpen && (
+              <div className="mobile-menu-dropdown absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <div className="py-2">
+                  <Link
+                    href="/"
+                    onClick={closeMobileMenu}
+                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    href="/about"
+                    onClick={closeMobileMenu}
+                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                  >
+                    About
+                  </Link>
+                  <Link
+                    href="/services"
+                    onClick={closeMobileMenu}
+                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                  >
+                    Our Services
+                  </Link>
+                  <Link
+                    href="/contact"
+                    onClick={closeMobileMenu}
+                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                  >
+                    Contact Us
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Side Actions - Hidden on mobile */}
+          <div className="hidden md:flex navbar-actions">
             {isMounted ? (
               <>
                 {/* Dark/Light Mode Toggle */}
-                <button 
+                <button
                   onClick={toggleDarkMode}
                   className="flex items-center justify-center hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700"
                   style={{
@@ -137,17 +228,17 @@ export default function Navbar() {
                   data-property="dark mood"
                 >
                   {isDarkMode ? (
-                    <Moon 
-                      style={{ 
+                    <Moon
+                      style={{
                         width: '19.678909301757812px',
                         height: '19.678909301757812px',
                         color: 'rgba(47, 233, 0, 1)',
                         opacity: 1
-                      }} 
+                      }}
                     />
                   ) : (
-                    <Sun 
-                      style={{ 
+                    <Sun
+                      style={{
                         width: '19.678909301757812px',
                         height: '19.678909301757812px',
                         color: 'rgba(47, 233, 0, 1)',
@@ -157,29 +248,15 @@ export default function Navbar() {
                   )}
                 </button>
 
-                {/* Login Button */}
-                <Link
-                  href="/login"
-                  className="navbar-login-btn"
-                >
-                  Login
-                </Link>
-
-                {/* Sign Up Button */}
-                <Link
-                  href="/signup"
-                  className="navbar-signup-btn"
-                >
-                  Sign Up
-                </Link>
+                {/* User Profile Avatar */}
+                <NavbarProfileAvatar />
               </>
             ) : (
               // SSR placeholder: Render invisible skeleton to prevent hydration mismatch
               // This maintains layout and prevents browser extensions from injecting content
               <>
                 <div style={{ width: '44px', height: '44px', visibility: 'hidden' }} aria-hidden="true" />
-                <div style={{ width: '80px', height: '40px', visibility: 'hidden' }} aria-hidden="true" />
-                <div style={{ width: '90px', height: '40px', visibility: 'hidden' }} aria-hidden="true" />
+                <div style={{ width: '44px', height: '44px', visibility: 'hidden' }} aria-hidden="true" />
               </>
             )}
           </div>
@@ -188,4 +265,65 @@ export default function Navbar() {
     </nav>
   );
 }
+
+/* ─── Navbar Profile Avatar (read-only) ─────────────────── */
+function NavbarProfileAvatar() {
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = () => {
+      const saved = localStorage.getItem("profile-image");
+      setProfileImage(saved ?? null);
+    };
+    load();
+    window.addEventListener("storage", load);
+    return () => window.removeEventListener("storage", load);
+  }, []);
+
+  return (
+    <Link
+      href="/dashboard/personal-information"
+      aria-label="View profile"
+      style={{
+        width: '44px',
+        height: '44px',
+        borderRadius: '50%',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: '#B9B9B9',
+        backgroundColor: 'white',
+        boxShadow: '0px 0px 7.4px 0px rgba(0, 0, 0, 0.34)',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        textDecoration: 'none',
+      }}
+      suppressHydrationWarning
+    >
+      {profileImage ? (
+        <img
+          src={profileImage}
+          alt="User profile"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+        />
+      ) : (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#8E8E93"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ width: '22px', height: '22px' }}
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      )}
+    </Link>
+  );
+}
+
 
