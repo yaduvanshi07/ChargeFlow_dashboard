@@ -652,13 +652,14 @@
   }
 
   .dashboard-badges-container {
-    width: 100% !important;
-    height: auto !important;
-    flex-wrap: nowrap !important;
-    justify-content: center !important;
-    gap: 10px !important;
-    overflow: hidden !important;
-  }
+  width: 100% !important;
+  height: auto !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  overflow: visible !important;   /* FIX: allow shadow to show */
+  padding-bottom: 6px !important; /* small space for bottom shadow */
+}
 
   .dashboard-badge {
     width: auto !important;

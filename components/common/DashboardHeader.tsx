@@ -76,9 +76,11 @@ export default function DashboardHeader({
                     style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
                   />
                 ) : (
-                  <span className="dashboard-avatar-text">
-                    {userName.charAt(0)}
-                  </span>
+                  <img
+                    src="/user.jpg"
+                    alt="Profile placeholder"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                  />
                 )}
               </div>
 

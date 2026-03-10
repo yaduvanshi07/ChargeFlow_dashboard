@@ -1,0 +1,239 @@
+/* ═══════════════════════════════════════════════════════════════
+   Request Call Modal Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ───────────────────────────────────────────────────── */
+.rcm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    padding: 16px;
+    animation: rcmFadeIn 0.22s ease-out;
+}
+
+/* ── Container ─────────────────────────────────────────────────── */
+.rcm-container {
+    width: 100%;
+    max-width: 560px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: rcmSlideUp 0.28s ease-out;
+}
+
+/* ── Header ────────────────────────────────────────────────────── */
+.rcm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #27C300;
+    padding: 14px 20px;
+    flex-shrink: 0;
+}
+
+.rcm-header-title {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+}
+
+.rcm-header-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.rcm-header-close:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Body ──────────────────────────────────────────────────────── */
+.rcm-body {
+    padding: 36px 40px 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Heading ───────────────────────────────────────────────────── */
+.rcm-heading {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #364153;
+    margin: 0;
+    text-align: center;
+    line-height: 1;
+    letter-spacing: 0%;
+}
+
+/* ── Subtext ───────────────────────────────────────────────────── */
+.rcm-subtext {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #8E8E93;
+    margin: 0 0 16px 0;
+    text-align: center;
+    line-height: 1;
+    letter-spacing: 0%;
+}
+
+/* ── Issue Grid ────────────────────────────────────────────────── */
+.rcm-issue-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    width: 100%;
+}
+
+/* ── Issue Button ──────────────────────────────────────────────── */
+.rcm-issue-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6.2px 15px;
+    height: 48px;
+    background: #ffffff;
+    border: 1px solid #AAAAAA;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+        border-color 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        background-color 0.3s ease-out,
+        transform 0.15s ease;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rcm-issue-btn:hover {
+    border-color: #27C300;
+    background-color: #f0fff0;
+    box-shadow: 0 2px 12px rgba(39, 195, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.rcm-issue-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ── Issue Icon ────────────────────────────────────────────────── */
+.rcm-issue-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #27C300;
+    flex-shrink: 0;
+}
+
+/* ── Issue Label ───────────────────────────────────────────────── */
+.rcm-issue-label {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #364153;
+    white-space: nowrap;
+    line-height: 1;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+}
+
+/* ── Animations ────────────────────────────────────────────────── */
+@keyframes rcmFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes rcmSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .rcm-issue-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rcm-body {
+        padding: 28px 20px 36px;
+    }
+
+    .rcm-heading {
+        font-size: 22px;
+    }
+
+    .rcm-issue-label {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 480px) {
+    .rcm-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .rcm-container {
+        border-radius: 14px 14px 0 0;
+        max-width: 100%;
+        animation: rcmSlideUpMobile 0.28s ease-out;
+    }
+
+    .rcm-body {
+        padding: 24px 16px 32px;
+    }
+
+    .rcm-heading {
+        font-size: 20px;
+    }
+}
+
+@keyframes rcmSlideUpMobile {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

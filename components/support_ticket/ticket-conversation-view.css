@@ -1,0 +1,494 @@
+/* ═══════════════════════════════════════════════════════════════
+   Ticket Conversation View Styles
+   Prefix: tcv-   (fully scoped — no global conflicts)
+   Mirrors the design conventions of payment-issue-modal.css
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ───────────────────────────────────────────────────── */
+.tcv-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    padding: 16px;
+    animation: tcvFadeIn 0.22s ease-out;
+}
+
+/* ── Container ─────────────────────────────────────────────────── */
+.tcv-container {
+    width: 100%;
+    max-width: 470px;
+    height: 85vh;
+    max-height: 760px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: tcvSlideUp 0.28s ease-out;
+}
+
+/* ── Header ────────────────────────────────────────────────────── */
+.tcv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #27C300;
+    padding: 10px 20px;
+    flex-shrink: 0;
+    gap: 8px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    min-height: 52px;
+    box-sizing: border-box;
+}
+
+.tcv-logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.tcv-logo {
+    width: auto;
+    height: 30px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.tcv-header-title {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    text-align: left;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tcv-header-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    padding: 4px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+    line-height: 0;
+}
+
+.tcv-header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Ticket Info Block ─────────────────────────────────────────── */
+.tcv-info-block {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.tcv-info-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.tcv-ticket-id {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: 0%;
+}
+
+.tcv-ticket-row {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #4b5563;
+    margin: 0;
+    line-height: 1.4;
+    letter-spacing: 0%;
+}
+
+.tcv-ticket-label {
+    font-weight: 600;
+    color: #374151;
+}
+
+/* ── Status Badge ──────────────────────────────────────────────── */
+.tcv-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #fdf0e6;
+    color: #e47b40;
+    border: 1px solid #f9d8c4;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* ── Chat Area ─────────────────────────────────────────────────── */
+.tcv-chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background-color: #ffffff;
+    scroll-behavior: smooth;
+}
+
+/* Slim scrollbar */
+.tcv-chat-area::-webkit-scrollbar {
+    width: 5px;
+}
+
+.tcv-chat-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tcv-chat-area::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 99px;
+}
+
+.tcv-chat-area::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* ── Message Wrapper ───────────────────────────────────────────── */
+.tcv-msg-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 82%;
+}
+
+.tcv-msg-wrapper--user {
+    align-self: flex-start;
+}
+
+.tcv-msg-wrapper--agent {
+    align-self: flex-end;
+}
+
+/* ── Message Bubble ────────────────────────────────────────────── */
+.tcv-msg-bubble {
+    position: relative;
+    padding: 11px 15px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0%;
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+/* User message — left side, light green */
+.tcv-msg-wrapper--user .tcv-msg-bubble {
+    background-color: #b2fab4;
+    color: #111827;
+    border-radius: 16px;
+    border-top-left-radius: 3px;
+}
+
+/* Triangle tail — user (left side, top-anchored) */
+.tcv-msg-wrapper--user .tcv-msg-bubble::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 1px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #b2fab4;
+}
+
+/* Agent message — right side, brand green */
+.tcv-msg-wrapper--agent .tcv-msg-bubble {
+    background-color: #27C300;
+    color: #ffffff;
+    border-radius: 16px;
+    border-top-right-radius: 3px;
+}
+
+/* Triangle tail — agent (right side, top-anchored) */
+.tcv-msg-wrapper--agent .tcv-msg-bubble::before {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #27C300;
+}
+
+/* ── Timestamp ─────────────────────────────────────────────────── */
+.tcv-msg-timestamp {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #9ca3af;
+    margin-top: 4px;
+    line-height: 1;
+}
+
+.tcv-msg-wrapper--user .tcv-msg-timestamp {
+    text-align: left;
+    margin-left: 4px;
+}
+
+.tcv-msg-wrapper--agent .tcv-msg-timestamp {
+    text-align: right;
+    margin-right: 4px;
+}
+
+/* ── Input Area ────────────────────────────────────────────────── */
+.tcv-input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    height: 55px;
+    min-height: 55px;
+    box-sizing: border-box;
+}
+
+/* ── Input Wrapper (mic + field) — mirrors chat-input-wrapper ──── */
+.tcv-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border-radius: 9px;
+    padding: 10px;
+    border: 1px solid #8E8E93;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    height: 45px;
+    box-sizing: border-box;
+}
+
+.tcv-input-wrapper:focus-within {
+    border-color: #27C300;
+    box-shadow: 0 0 0 3px rgba(39, 195, 0, 0.08);
+}
+
+/* ── Mic Button — mirrors chat-input-mic ──────────────────────── */
+.tcv-input-mic {
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #27C300;
+    flex-shrink: 0;
+    transition: color 0.2s, border-color 0.2s;
+    width: 29px;
+    height: 29px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    line-height: 0;
+}
+
+.tcv-input-mic:hover {
+    color: #1fa800;
+    border-color: #27C300;
+}
+
+/* ── Text Field — mirrors chat-input-field ────────────────────── */
+.tcv-input-field {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    color: #374151;
+    min-width: 0;
+    height: 24px;
+    line-height: 24px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.tcv-input-field::placeholder {
+    color: #9ca3af;
+}
+
+/* ── Send Button — mirrors chat-send-button (square) ─────────── */
+.tcv-send-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    background-color: #2BD101;
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+    line-height: 0;
+    box-shadow: 0 2px 8px rgba(43, 209, 1, 0.3);
+}
+
+.tcv-send-btn:hover:not(:disabled) {
+    background-color: #22b300;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(43, 209, 1, 0.4);
+}
+
+.tcv-send-btn:active:not(:disabled) {
+    transform: scale(0.97);
+    box-shadow: none;
+}
+
+.tcv-send-btn:disabled {
+    background-color: #b2fab4;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+}
+
+/* ── Animations ────────────────────────────────────────────────── */
+@keyframes tcvFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes tcvSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+    .tcv-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .tcv-container {
+        max-width: 100%;
+        height: 92vh;
+        max-height: 92vh;
+        border-radius: 12px 12px 0 0;
+        animation: tcvSlideUpMobile 0.28s ease-out;
+    }
+
+    .tcv-header-title {
+        font-size: 16px;
+    }
+
+    .tcv-ticket-id {
+        font-size: 15px;
+    }
+
+    .tcv-ticket-row {
+        font-size: 12.5px;
+    }
+
+    .tcv-msg-bubble {
+        font-size: 13.5px;
+    }
+
+    .tcv-input-wrapper {
+        height: 42px;
+    }
+
+    .tcv-input-field {
+        font-size: 13.5px;
+    }
+
+    .tcv-send-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+    }
+}
+
+@media (max-width: 400px) {
+    .tcv-msg-wrapper {
+        max-width: 90%;
+    }
+
+    .tcv-info-block {
+        padding: 12px 14px;
+    }
+
+    .tcv-input-area {
+        padding: 12px 14px;
+    }
+}
+
+@keyframes tcvSlideUpMobile {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

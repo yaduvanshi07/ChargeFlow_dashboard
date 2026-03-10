@@ -96,7 +96,7 @@ export default function Navbar() {
         className="w-full h-full mx-auto"
         style={{ maxWidth: '1440px' }}
       >
-        <div className="flex items-center justify-between h-full flex-wrap gap-2">
+        <div className="flex items-center h-full flex-wrap gap-2">
           {/* Logo and Brand */}
           <div className="flex flex-col items-start">
             <div className="navbar-logo relative flex-shrink-0">
@@ -114,7 +114,7 @@ export default function Navbar() {
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-3 lg:gap-6">
+          <div className="hidden md:flex items-center gap-3 lg:gap-6 mx-auto">
             <Link
               href="/"
               className="text-base lg:text-lg text-black hover:text-gray-700 transition-colors"
@@ -141,73 +141,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Menu Button - Only visible on mobile */}
-          <div className="md:hidden mobile-menu-container relative">
-            <button
-              onClick={toggleMobileMenu}
-              className="flex items-center justify-center hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700"
-              style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '90px',
-                borderWidth: '1px',
-                border: '1px solid #B9B9B9',
-                opacity: 1,
-                backgroundColor: 'white',
-                boxShadow: '0px 0px 7.4px 0px rgba(0, 0, 0, 0.34)',
-              }}
-              aria-label="Menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <MoreVertical
-                style={{
-                  width: '19.678909301757812px',
-                  height: '19.678909301757812px',
-                  color: 'rgba(0, 0, 0, 0.7)',
-                  opacity: 1
-                }}
-              />
-            </button>
-
-            {/* Mobile Dropdown Menu */}
-            {isMobileMenuOpen && (
-              <div className="mobile-menu-dropdown absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                <div className="py-2">
-                  <Link
-                    href="/"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    href="/about"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
-                  >
-                    About
-                  </Link>
-                  <Link
-                    href="/services"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
-                  >
-                    Our Services
-                  </Link>
-                  <Link
-                    href="/contact"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
-                  >
-                    Contact Us
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right Side Actions - Hidden on mobile */}
-          <div className="hidden md:flex navbar-actions">
+          {/* Right Side Actions - pushed to far right, always visible */}
+          <div className="flex items-center gap-2 navbar-actions ml-auto">
             {isMounted ? (
               <>
                 {/* Dark/Light Mode Toggle */}
@@ -250,10 +185,74 @@ export default function Navbar() {
 
                 {/* User Profile Avatar */}
                 <NavbarProfileAvatar />
+
+                {/* Mobile Menu Button - Only visible on mobile, always rightmost */}
+                <div className="md:hidden mobile-menu-container relative">
+                  <button
+                    onClick={toggleMobileMenu}
+                    className="flex items-center justify-center hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700"
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      borderRadius: '90px',
+                      borderWidth: '1px',
+                      border: '1px solid #B9B9B9',
+                      opacity: 1,
+                      backgroundColor: 'white',
+                      boxShadow: '0px 0px 7.4px 0px rgba(0, 0, 0, 0.34)',
+                    }}
+                    aria-label="Menu"
+                    aria-expanded={isMobileMenuOpen}
+                  >
+                    <MoreVertical
+                      style={{
+                        width: '19.678909301757812px',
+                        height: '19.678909301757812px',
+                        color: 'rgba(0, 0, 0, 0.7)',
+                        opacity: 1
+                      }}
+                    />
+                  </button>
+
+                  {/* Mobile Dropdown Menu */}
+                  {isMobileMenuOpen && (
+                    <div className="mobile-menu-dropdown absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                      <div className="py-2">
+                        <Link
+                          href="/"
+                          onClick={closeMobileMenu}
+                          className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                        >
+                          Home
+                        </Link>
+                        <Link
+                          href="/about"
+                          onClick={closeMobileMenu}
+                          className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                        >
+                          About
+                        </Link>
+                        <Link
+                          href="/services"
+                          onClick={closeMobileMenu}
+                          className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                        >
+                          Our Services
+                        </Link>
+                        <Link
+                          href="/contact"
+                          onClick={closeMobileMenu}
+                          className="block px-4 py-3 text-base text-black hover:bg-gray-50 transition-colors"
+                        >
+                          Contact Us
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               // SSR placeholder: Render invisible skeleton to prevent hydration mismatch
-              // This maintains layout and prevents browser extensions from injecting content
               <>
                 <div style={{ width: '44px', height: '44px', visibility: 'hidden' }} aria-hidden="true" />
                 <div style={{ width: '44px', height: '44px', visibility: 'hidden' }} aria-hidden="true" />
@@ -325,5 +324,3 @@ function NavbarProfileAvatar() {
     </Link>
   );
 }
-
-

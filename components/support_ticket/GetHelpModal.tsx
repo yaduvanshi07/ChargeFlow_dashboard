@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import "@/components/support_ticket/get-help-modal.css";
 
@@ -6,9 +6,10 @@ interface GetHelpModalProps {
     isOpen: boolean;
     onClose: () => void;
     onRequestChat?: () => void;
+    onRequestCall?: () => void;
 }
 
-export default function GetHelpModal({ isOpen, onClose, onRequestChat }: GetHelpModalProps) {
+export default function GetHelpModal({ isOpen, onClose, onRequestChat, onRequestCall }: GetHelpModalProps) {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = "hidden";
@@ -20,6 +21,13 @@ export default function GetHelpModal({ isOpen, onClose, onRequestChat }: GetHelp
         };
     }, [isOpen]);
 
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const saved = localStorage.getItem("profile-image");
+        if (saved) setProfileImage(saved);
+    }, []);
+
     if (!isOpen) return null;
 
     const handleChatClick = () => {
@@ -30,8 +38,10 @@ export default function GetHelpModal({ isOpen, onClose, onRequestChat }: GetHelp
     };
 
     const handleCallClick = () => {
-        console.log("Call Requested");
         onClose();
+        if (onRequestCall) {
+            onRequestCall();
+        }
     };
 
     return (
@@ -41,6 +51,19 @@ export default function GetHelpModal({ isOpen, onClose, onRequestChat }: GetHelp
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="help-modal-header">
+                    {profileImage ? (
+                        <img
+                            src={profileImage}
+                            alt="Profile"
+                            className="help-modal-user-avatar"
+                        />
+                    ) : (
+                        <img
+                            src="/user.jpg"
+                            alt="Profile placeholder"
+                            className="help-modal-user-avatar"
+                        />
+                    )}
                     <h2>How Would You Like To Get Help?</h2>
                     <button className="help-modal-close" onClick={onClose}>
                         <Icon icon="mdi:close" width={24} height={24} color="#757575" />

@@ -21,6 +21,8 @@ import "@/components/support_ticket/raise-ticket-modal.css";
 import RaiseTicketModal from "@/components/support_ticket/RaiseTicketModal";
 import GetHelpModal from "@/components/support_ticket/GetHelpModal";
 import SupportChatModal from "@/components/support_ticket/SupportChatModal";
+import RequestCallModal from "@/components/support_ticket/RequestCallModal";
+import TicketConversationView from "@/components/support_ticket/TicketConversationView";
 
 // ── Status Badge Components ──────────────────────────────────────────────────
 
@@ -73,6 +75,8 @@ export default function SupportTicketsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [isConversationOpen, setIsConversationOpen] = useState(false);
 
   const tabs = [
     "Overview",
@@ -312,6 +316,7 @@ export default function SupportTicketsPage() {
                               <button
                                 className="support-table-action-button"
                                 aria-label={`View ticket ${ticket.id}`}
+                                onClick={() => setIsConversationOpen(true)}
                               >
                                 <span className="action-icon">
                                   <Icon icon="mdi:eye-outline" width={16} height={16} />
@@ -343,11 +348,22 @@ export default function SupportTicketsPage() {
         isOpen={isHelpModalOpen}
         onClose={() => setIsHelpModalOpen(false)}
         onRequestChat={() => setIsChatModalOpen(true)}
+        onRequestCall={() => setIsCallModalOpen(true)}
       />
 
       <SupportChatModal
         isOpen={isChatModalOpen}
         onClose={() => setIsChatModalOpen(false)}
+      />
+
+      <RequestCallModal
+        isOpen={isCallModalOpen}
+        onClose={() => setIsCallModalOpen(false)}
+      />
+
+      <TicketConversationView
+        isOpen={isConversationOpen}
+        onClose={() => setIsConversationOpen(false)}
       />
     </>
   );

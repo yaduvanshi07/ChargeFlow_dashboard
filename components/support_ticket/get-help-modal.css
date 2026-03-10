@@ -37,6 +37,21 @@
     border-bottom: 1px solid #E5E5EA;
 }
 
+/* User avatar in header */
+.help-modal-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.help-modal-user-avatar--placeholder {
+    color: #CCCCCC;
+    width: 40px !important;
+    height: 40px !important;
+}
+
 .help-modal-header h2 {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 500;
